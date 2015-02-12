@@ -16,6 +16,7 @@ public class CraftingHandler
     	if (event.crafting.getItem() == RestrictedPortals.netherItem)
         {
             event.player.addStat(RestrictedPortals.netherUnlock, 1);
+            
         }else if (event.crafting.getItem() == RestrictedPortals.endItem)
         {
             event.player.addStat(RestrictedPortals.endUnlock, 1);

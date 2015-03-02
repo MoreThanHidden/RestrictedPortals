@@ -8,6 +8,7 @@ import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
@@ -41,16 +42,22 @@ public class TickHandler {
 			
             PlayerMoveEvent moveEvent = new PlayerMoveEvent(player, before, current);
             MinecraftForge.EVENT_BUS.post(moveEvent);
-            if (moveEvent.isCanceled()){
-            	
-            	if (player.dimension != before.getDim())
-                	{
-                		MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, before.getDim());
-                	}
+            
+            if (moveEvent.isCanceled() && event.side == Side.SERVER){
+                	 
+            	if (current.dim == 1){
+            		
+                	player.travelToDimension(1);
+                	
+                	ChunkCoordinates coordinates = player.getBedLocation(0);
+        			if (coordinates == null){ coordinates = player.worldObj.getSpawnPoint(); }
+        			
+        			player.setPositionAndUpdate(coordinates.posX, coordinates.posY + 1, coordinates.posZ);
+        			
+                }else{            	
+                	MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, before.getDim());
                 	player.playerNetServerHandler.setPlayerLocation(before.getX(), before.getY(), before.getZ(), before.getYaw(), before.getPitch());
-                	player.prevPosX = player.posX = before.getX();
-                	player.prevPosY = player.posY = before.getY();
-                	player.prevPosZ = player.posZ = before.getZ();
+            	}
             }
         }
 		

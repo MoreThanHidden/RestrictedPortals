@@ -24,12 +24,12 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.1")
+@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.2")
 public class RestrictedPortals {
 
-	@Instance(value = "DoomShrine")
+	@Instance(value = "RestrictedPortals")
 	public static RestrictedPortals instance;
-
+	
 	public static Logger logger = LogManager.getLogger("RestrictedPortals");
 
 	public static Achievement netherUnlock;

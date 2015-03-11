@@ -2,8 +2,8 @@
 {
   "modid": "RestrictedPortals",
   "name": "Restricted Portals",
-  "description": "A mod that requires you to craft an item before allowing the player to enter the nether or end, this is to stop people on multiplayer servers bypassing early game.",
-  "version": "0.1",
+  "description": "A mod that requires you to craft an item before allowing the player to enter the nether or end.",
+  "version": "0.2",
   "mcversion": "${mcversion}",
   "url": "https://github.com/MoreThanHidden/DoomShrine",
   "updateUrl": "",

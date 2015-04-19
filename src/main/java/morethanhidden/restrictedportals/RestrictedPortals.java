@@ -1,7 +1,9 @@
 package morethanhidden.restrictedportals;
 
+import cpw.mods.fml.common.SidedProxy;
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
+import morethanhidden.restrictedportals.proxy.CommonProxy;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -38,7 +40,11 @@ public class RestrictedPortals {
 	public static Item netherItem;
 	public static Item endItem;
 
-		@EventHandler
+	@SidedProxy(clientSide="morethanhidden.restrictedportals.proxy.ClientProxy",
+			serverSide="morethanhidden.restrictedportals.proxy.CommonProxy")
+	public static CommonProxy proxy;
+
+	@EventHandler
 		public void preInit(FMLPreInitializationEvent event) {
 				
 			Configuration config = new Configuration(event.getSuggestedConfigurationFile());
@@ -87,12 +93,9 @@ public class RestrictedPortals {
 		@EventHandler
 		public void load(FMLInitializationEvent event) {
 	
-			//Temporary Naming
-			LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock", "en_US", "Nether Unlocked!");
+			//Temporary Naming based on config
 			LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(netherItem.getUnlocalizedName() + ".name"));
-			LanguageRegistry.instance().addStringLocalization("achievement.endUnlock", "en_US", "End Unlocked!");
 			LanguageRegistry.instance().addStringLocalization("achievement.endUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(endItem.getUnlocalizedName() + ".name"));
-
 		         
 		}
 

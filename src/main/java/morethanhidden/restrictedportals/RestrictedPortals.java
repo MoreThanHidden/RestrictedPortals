@@ -24,7 +24,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.2")
+@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.3")
 public class RestrictedPortals {
 
 	@Instance(value = "RestrictedPortals")

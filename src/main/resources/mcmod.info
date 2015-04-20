@@ -3,7 +3,7 @@
   "modid": "RestrictedPortals",
   "name": "Restricted Portals",
   "description": "A mod that requires you to craft an item before allowing the player to enter the nether or end.",
-  "version": "0.2",
+  "version": "0.3",
   "mcversion": "${mcversion}",
   "url": "https://github.com/MoreThanHidden/DoomShrine",
   "updateUrl": "",

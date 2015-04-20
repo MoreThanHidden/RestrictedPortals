@@ -1,10 +1,8 @@
 package morethanhidden.restrictedportals;
 
-import cpw.mods.fml.common.SidedProxy;
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
-import morethanhidden.restrictedportals.proxy.CommonProxy;
-import net.minecraft.client.resources.I18n;
+import morethanhidden.restrictedportals.items.WorldKey;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,16 +35,16 @@ public class RestrictedPortals {
 	public static Achievement netherUnlock;
 	public static Achievement endUnlock;
 
+	public static final Item netherKey = new WorldKey("netherKey");
+	public static final Item endKey = new WorldKey("endKey");
+
 	public static Item netherItem;
 	public static Item endItem;
-
-	@SidedProxy(clientSide="morethanhidden.restrictedportals.proxy.ClientProxy",
-			serverSide="morethanhidden.restrictedportals.proxy.CommonProxy")
-	public static CommonProxy proxy;
+	public boolean useKeys;
 
 	@EventHandler
 		public void preInit(FMLPreInitializationEvent event) {
-				
+
 			Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 			
 			config.load();
@@ -54,15 +52,24 @@ public class RestrictedPortals {
         	// Configuration
         	String netherItemRaw = config.get(config.CATEGORY_GENERAL, "Item to Unlock the Nether", "minecraft:flint_and_steel").getString();
         	String endItemRaw = config.get(config.CATEGORY_GENERAL, "Item to Unlock the End", "minecraft:ender_eye").getString();
-        	
+        	useKeys = config.get(config.CATEGORY_GENERAL, "Use keys rather than Items specified above", false).getBoolean();
         	config.save();
-			
-        	String[] netherSplit = netherItemRaw.split(":");
-        	String[] endSplit = endItemRaw.split(":");
-        	
-			endItem = GameRegistry.findItem(endSplit[0], endSplit[1]);
-			netherItem = GameRegistry.findItem(netherSplit[0], netherSplit[1]);
-			
+
+			if (useKeys == false) {
+				String[] netherSplit = netherItemRaw.split(":");
+				String[] endSplit = endItemRaw.split(":");
+
+				endItem = GameRegistry.findItem(endSplit[0], endSplit[1]);
+				netherItem = GameRegistry.findItem(netherSplit[0], netherSplit[1]);
+			}else{
+
+				GameRegistry.registerItem(endKey, "endKey");
+				GameRegistry.registerItem(netherKey, "netherKey");
+
+				endItem = RestrictedPortals.endKey;
+				netherItem = RestrictedPortals.netherKey;
+			}
+
 			//If Configuration is invalid
 			if (endItem == null){
 				endItem = Items.ender_eye;
@@ -96,7 +103,11 @@ public class RestrictedPortals {
 			//Temporary Naming based on config
 			LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(netherItem.getUnlocalizedName() + ".name"));
 			LanguageRegistry.instance().addStringLocalization("achievement.endUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(endItem.getUnlocalizedName() + ".name"));
-		         
+			if(useKeys == true) {
+				//Recipes for Keys
+				GameRegistry.addShapelessRecipe(new ItemStack(endKey), new ItemStack(Items.ender_eye));
+				GameRegistry.addShapelessRecipe(new ItemStack(netherKey), new ItemStack(Items.flint_and_steel));
+			}
 		}
 
 }

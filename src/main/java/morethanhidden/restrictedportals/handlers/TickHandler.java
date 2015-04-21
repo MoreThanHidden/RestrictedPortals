@@ -6,19 +6,13 @@ import java.util.UUID;
 import morethanhidden.restrictedportals.RestrictedPortals;
 import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 
@@ -62,9 +56,7 @@ public class TickHandler {
         }
 		
 		lastPlayerPosition.put(player.getPersistentID(), new PlayerPos(event.player));
-		
-		
-		
+
 	}
 	
 	

@@ -1,8 +1,6 @@
 package morethanhidden.restrictedportals.object;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class PlayerPos{
  public int dim;

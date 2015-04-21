@@ -50,12 +50,12 @@ public class RestrictedPortals {
 			config.load();
 			
         	// Configuration
-        	String netherItemRaw = config.get(config.CATEGORY_GENERAL, "Item to Unlock the Nether", "minecraft:flint_and_steel").getString();
-        	String endItemRaw = config.get(config.CATEGORY_GENERAL, "Item to Unlock the End", "minecraft:ender_eye").getString();
-        	useKeys = config.get(config.CATEGORY_GENERAL, "Use keys rather than Items specified above", false).getBoolean();
+        	String netherItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Item to Unlock the Nether", "minecraft:flint_and_steel").getString();
+        	String endItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Item to Unlock the End", "minecraft:ender_eye").getString();
+        	useKeys = config.get(Configuration.CATEGORY_GENERAL, "Use keys rather than Items specified above", false).getBoolean();
         	config.save();
 
-			if (useKeys == false) {
+			if (!useKeys) {
 				String[] netherSplit = netherItemRaw.split(":");
 				String[] endSplit = endItemRaw.split(":");
 
@@ -89,7 +89,7 @@ public class RestrictedPortals {
 			FMLCommonHandler.instance().bus().register(new CraftingHandler());
     
 			//Achievements
-			netherUnlock = new Achievement("achievement.netherUnlock", "netherUnlock", 0, 0, netherItem, (Achievement)null).initIndependentStat().registerStat();
+			netherUnlock = new Achievement("achievement.netherUnlock", "netherUnlock", 0, 0, netherItem, null).initIndependentStat().registerStat();
 			endUnlock = new Achievement("achievement.endUnlock", "endUnlock", 1, 0, endItem, netherUnlock).initIndependentStat().registerStat();
 			AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", new Achievement[]{netherUnlock, endUnlock}));
 	
@@ -103,7 +103,8 @@ public class RestrictedPortals {
 			//Temporary Naming based on config
 			LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(netherItem.getUnlocalizedName() + ".name"));
 			LanguageRegistry.instance().addStringLocalization("achievement.endUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(endItem.getUnlocalizedName() + ".name"));
-			if(useKeys == true) {
+
+			if(useKeys) {
 				//Recipes for Keys
 				GameRegistry.addShapelessRecipe(new ItemStack(endKey), new ItemStack(Items.ender_eye));
 				GameRegistry.addShapelessRecipe(new ItemStack(netherKey), new ItemStack(Items.flint_and_steel));

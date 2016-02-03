@@ -9,6 +9,5 @@ public class WorldKey extends Item {
         this.setHasSubtypes(true);
         this.setUnlocalizedName(unlocalizedName);
         this.setCreativeTab(CreativeTabs.tabMaterials);
-        this.setTextureName("restrictedportals:" + unlocalizedName);
     }
 }

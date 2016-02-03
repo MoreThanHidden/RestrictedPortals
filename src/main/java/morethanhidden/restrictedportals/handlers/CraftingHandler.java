@@ -1,17 +1,17 @@
 package morethanhidden.restrictedportals.handlers;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import morethanhidden.restrictedportals.RestrictedPortals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class CraftingHandler
 {
     @SubscribeEvent
-    public void onCrafting(ItemCraftedEvent event)
+    public void onCrafting(PlayerEvent.ItemCraftedEvent event)
     {
     	if (event.crafting.getItem() == RestrictedPortals.netherItem)
         {

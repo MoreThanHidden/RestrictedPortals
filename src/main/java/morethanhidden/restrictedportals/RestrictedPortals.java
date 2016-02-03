@@ -3,6 +3,7 @@ package morethanhidden.restrictedportals;
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
 import morethanhidden.restrictedportals.items.WorldKey;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,23 +12,20 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.3")
+@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="1.8.9-0.4")
 public class RestrictedPortals {
 
-	@Instance(value = "RestrictedPortals")
+	@Mod.Instance(value = "RestrictedPortals")
 	public static RestrictedPortals instance;
 	
 	public static Logger logger = LogManager.getLogger("RestrictedPortals");
@@ -42,7 +40,7 @@ public class RestrictedPortals {
 	public static Item endItem;
 	public boolean useKeys;
 
-	@EventHandler
+	@Mod.EventHandler
 		public void preInit(FMLPreInitializationEvent event) {
 
 			Configuration config = new Configuration(event.getSuggestedConfigurationFile());
@@ -97,7 +95,7 @@ public class RestrictedPortals {
 
 		}
 
-		@EventHandler
+		@Mod.EventHandler
 		public void load(FMLInitializationEvent event) {
 	
 			//Temporary Naming based on config

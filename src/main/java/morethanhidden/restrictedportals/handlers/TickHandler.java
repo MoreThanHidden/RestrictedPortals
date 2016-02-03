@@ -8,17 +8,17 @@ import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TickHandler {
 	
-	private HashMap<UUID, PlayerPos> lastPlayerPosition = new HashMap<>();
+	private HashMap<UUID, PlayerPos> lastPlayerPosition = new HashMap();
 	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event)
@@ -40,13 +40,12 @@ public class TickHandler {
             if (moveEvent.isCanceled() && event.side == Side.SERVER){
                 	 
             	if (current.dim == 1){
-            		
-                	player.travelToDimension(1);
-                	
-                	ChunkCoordinates coordinates = player.getBedLocation(0);
-        			if (coordinates == null){ coordinates = player.worldObj.getSpawnPoint(); }
-        			
-        			player.setPositionAndUpdate(coordinates.posX, coordinates.posY + 1, coordinates.posZ);
+
+					BlockPos coordinates = player.getBedLocation(0);
+					if (coordinates == null){ coordinates = player.worldObj.getSpawnPoint(); }
+
+					player.travelToDimension(1);
+        			player.setPositionAndUpdate(coordinates.getX(), coordinates.getY() + 1, coordinates.getZ());
         			
                 }else{            	
                 	MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, before.getDim());
@@ -68,13 +67,13 @@ public class TickHandler {
 		if (e.before.dim != e.entityPlayer.dimension){
 			
 		//Nether
-		if (e.entityPlayer.dimension == -1 && ! player.func_147099_x().hasAchievementUnlocked(RestrictedPortals.netherUnlock)){
+		if (e.entityPlayer.dimension == -1 && ! player.getStatFile().hasAchievementUnlocked(RestrictedPortals.netherUnlock)){
 			player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to make a " + StatCollector.translateToLocal(RestrictedPortals.netherItem.getUnlocalizedName() + ".name") + " first"));
 			e.setCanceled(true);
 		}
 		
 		//End
-		if (e.entityPlayer.dimension == 1 && ! player.func_147099_x().hasAchievementUnlocked(RestrictedPortals.endUnlock)){
+		if (e.entityPlayer.dimension == 1 && ! player.getStatFile().hasAchievementUnlocked(RestrictedPortals.endUnlock)){
 			player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to make a " + StatCollector.translateToLocal(RestrictedPortals.endItem.getUnlocalizedName() + ".name") + " first"));
 			e.setCanceled(true);
 		}

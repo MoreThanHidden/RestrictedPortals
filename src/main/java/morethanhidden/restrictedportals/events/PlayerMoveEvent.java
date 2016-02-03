@@ -1,9 +1,9 @@
 package morethanhidden.restrictedportals.events;
 
-import cpw.mods.fml.common.eventhandler.Cancelable;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 @Cancelable
 public class PlayerMoveEvent extends PlayerEvent{

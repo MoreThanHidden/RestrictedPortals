@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 
-@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="1.8.9-0.4")
+@Mod(modid="RestrictedPortals", name="Restricted Portals", version="1.8.9-0.4")
 public class RestrictedPortals {
 
 	@Mod.Instance(value = "RestrictedPortals")

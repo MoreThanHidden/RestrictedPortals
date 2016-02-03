@@ -2,7 +2,6 @@ package morethanhidden.restrictedportals;
 
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
-import morethanhidden.restrictedportals.items.WorldKey;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -21,6 +20,8 @@ import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 
 @Mod(modid="RestrictedPortals", name="RestrictedPortals", version="1.8.9-0.4")
 public class RestrictedPortals {
@@ -30,15 +31,10 @@ public class RestrictedPortals {
 	
 	public static Logger logger = LogManager.getLogger("RestrictedPortals");
 
-	public static Achievement netherUnlock;
-	public static Achievement endUnlock;
-
-	public static final Item netherKey = new WorldKey("netherKey");
-	public static final Item endKey = new WorldKey("endKey");
-
-	public static Item netherItem;
-	public static Item endItem;
-	public boolean useKeys;
+	public static Achievement[] portalUnlock;
+	public static String[] idSplit;
+	public static Item[] itemList;
+	public String[] nameSplit;
 
 	@Mod.EventHandler
 		public void preInit(FMLPreInitializationEvent event) {
@@ -48,35 +44,31 @@ public class RestrictedPortals {
 			config.load();
 			
         	// Configuration
-        	String netherItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Item to Unlock the Nether", "minecraft:flint_and_steel").getString();
-        	String endItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Item to Unlock the End", "minecraft:ender_eye").getString();
-        	useKeys = config.get(Configuration.CATEGORY_GENERAL, "Use keys rather than Items specified above", false).getBoolean();
+        	String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
+		    String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
+        	String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
         	config.save();
 
-			if (!useKeys) {
-				String[] netherSplit = netherItemRaw.split(":");
-				String[] endSplit = endItemRaw.split(":");
+			String[] craftSplit = craftItemRaw.split(",");
+			nameSplit = dimNameRaw.split(",");
+			idSplit = dimIDRaw.split(",");
 
-				endItem = GameRegistry.findItem(endSplit[0], endSplit[1]);
-				netherItem = GameRegistry.findItem(netherSplit[0], netherSplit[1]);
-			}else{
+			itemList = new Item[nameSplit.length];
+			portalUnlock = new Achievement[nameSplit.length];
 
-				GameRegistry.registerItem(endKey, "endKey");
-				GameRegistry.registerItem(netherKey, "netherKey");
-
-				endItem = RestrictedPortals.endKey;
-				netherItem = RestrictedPortals.netherKey;
+			//Basic Configuration Check
+			for (int i = 0; i < nameSplit.length; i++) {
+				String[] itemSplit = craftSplit[i].split(":");
+				itemList[i] = (GameRegistry.findItem(itemSplit[0], itemSplit[1]));
+				if(idSplit[i].equals("")){
+					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");
+				}else if (itemList[i] == null){
+					logger.info("Please fix the " + nameSplit[i] + " Item in the Config");
+				}else{
+					portalUnlock[i] = new Achievement("achievement." + nameSplit[i] + "Unlock", nameSplit[i] + "Unlock", i, 0, itemList[i], null).initIndependentStat().registerStat();
+				}
 			}
 
-			//If Configuration is invalid
-			if (endItem == null){
-				endItem = Items.ender_eye;
-				logger.info("Please fix the End Item in the Config");
-			}
-			if (netherItem == null){
-				netherItem = Items.flint_and_steel;
-				logger.info("Please fix the Nether Item in the Config");
-			}
 				
 			//Register Tick Handler
 			TickHandler tickHandler = new TickHandler();
@@ -87,25 +79,16 @@ public class RestrictedPortals {
 			FMLCommonHandler.instance().bus().register(new CraftingHandler());
     
 			//Achievements
-			netherUnlock = new Achievement("achievement.netherUnlock", "netherUnlock", 0, 0, netherItem, null).initIndependentStat().registerStat();
-			endUnlock = new Achievement("achievement.endUnlock", "endUnlock", 1, 0, endItem, netherUnlock).initIndependentStat().registerStat();
-			AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", new Achievement[]{netherUnlock, endUnlock}));
-	
-
+			AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
 
 		}
 
 		@Mod.EventHandler
 		public void load(FMLInitializationEvent event) {
-	
-			//Temporary Naming based on config
-			LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(netherItem.getUnlocalizedName() + ".name"));
-			LanguageRegistry.instance().addStringLocalization("achievement.endUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(endItem.getUnlocalizedName() + ".name"));
-
-			if(useKeys) {
-				//Recipes for Keys
-				GameRegistry.addShapelessRecipe(new ItemStack(endKey), new ItemStack(Items.ender_eye));
-				GameRegistry.addShapelessRecipe(new ItemStack(netherKey), new ItemStack(Items.flint_and_steel));
+			for (int i = 0; i < nameSplit.length; i++) {
+				//Temporary Naming based on config
+				LanguageRegistry.instance().addStringLocalization("achievement." + nameSplit[i] + "Unlock", "en_US", nameSplit[i] + " Unlocked");
+				LanguageRegistry.instance().addStringLocalization("achievement." + nameSplit[i] + "Unlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(itemList[i].getUnlocalizedName() + ".name"));
 			}
 		}
 

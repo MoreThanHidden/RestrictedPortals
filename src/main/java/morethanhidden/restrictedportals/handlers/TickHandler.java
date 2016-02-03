@@ -60,24 +60,18 @@ public class TickHandler {
 	
 	
 	@SubscribeEvent
-	public void onPlayerMoveEvent(PlayerMoveEvent e){
-		
+	public void onPlayerMoveEvent(PlayerMoveEvent e) {
+
 		EntityPlayerMP player = (EntityPlayerMP) e.entityPlayer;
-		
-		if (e.before.dim != e.entityPlayer.dimension){
-			
-		//Nether
-		if (e.entityPlayer.dimension == -1 && ! player.getStatFile().hasAchievementUnlocked(RestrictedPortals.netherUnlock)){
-			player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to make a " + StatCollector.translateToLocal(RestrictedPortals.netherItem.getUnlocalizedName() + ".name") + " first"));
-			e.setCanceled(true);
+
+		if (e.before.dim != e.entityPlayer.dimension) {
+			for (int i = 0; i < RestrictedPortals.idSplit.length; i++) {
+				if (e.entityPlayer.dimension == Integer.parseInt(RestrictedPortals.idSplit[i].trim()) && !player.getStatFile().hasAchievementUnlocked(RestrictedPortals.portalUnlock[i])) {
+					player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to craft a " + StatCollector.translateToLocal(RestrictedPortals.itemList[i].getUnlocalizedName() + ".name") + " first"));
+					e.setCanceled(true);
+				}
+			}
+
 		}
-		
-		//End
-		if (e.entityPlayer.dimension == 1 && ! player.getStatFile().hasAchievementUnlocked(RestrictedPortals.endUnlock)){
-			player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to make a " + StatCollector.translateToLocal(RestrictedPortals.endItem.getUnlocalizedName() + ".name") + " first"));
-			e.setCanceled(true);
-		}
-		}
-		
 	}
 }

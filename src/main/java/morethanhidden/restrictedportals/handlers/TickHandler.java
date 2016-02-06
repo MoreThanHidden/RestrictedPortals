@@ -3,10 +3,12 @@ package morethanhidden.restrictedportals.handlers;
 import java.util.HashMap;
 import java.util.UUID;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import morethanhidden.restrictedportals.RestrictedPortals;
 import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class TickHandler {
 	
@@ -58,7 +61,22 @@ public class TickHandler {
 		lastPlayerPosition.put(player.getPersistentID(), new PlayerPos(event.player));
 
 	}
-	
+
+	@SubscribeEvent
+	public void onRightClick(PlayerInteractEvent event)
+	{
+		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
+		{
+			if (FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.netherItem)
+			{
+				event.entityPlayer.addStat(RestrictedPortals.netherUnlock, 1);
+			}
+			if (FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.end_portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.endItem)
+			{
+				event.entityPlayer.addStat(RestrictedPortals.endUnlock, 1);
+			}
+		}
+	}
 	
 	@SubscribeEvent
 	public void onPlayerMoveEvent(PlayerMoveEvent e){

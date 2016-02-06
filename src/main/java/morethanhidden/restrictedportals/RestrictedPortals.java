@@ -1,6 +1,5 @@
 package morethanhidden.restrictedportals;
 
-import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
 import morethanhidden.restrictedportals.items.WorldKey;
 import net.minecraft.init.Items;
@@ -84,9 +83,6 @@ public class RestrictedPortals {
 			TickHandler tickHandler = new TickHandler();
 			FMLCommonHandler.instance().bus().register(tickHandler);
 			MinecraftForge.EVENT_BUS.register(tickHandler);
-				
-    		//Register Crafting Handler
-			FMLCommonHandler.instance().bus().register(new CraftingHandler());
     
 			//Achievements
 			netherUnlock = new Achievement("achievement.netherUnlock", "netherUnlock", 0, 0, netherItem, null).initIndependentStat().registerStat();

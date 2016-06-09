@@ -23,6 +23,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
+import java.util.ArrayList;
+
 @Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.3")
 public class RestrictedPortals {
 
@@ -39,6 +41,8 @@ public class RestrictedPortals {
 
 	public static Item netherItem;
 	public static Item endItem;
+	public static boolean netherLock;
+	public static boolean endLock;
 	public boolean useKeys;
 
 	@EventHandler
@@ -52,6 +56,8 @@ public class RestrictedPortals {
         	String netherItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Item to Unlock the Nether", "minecraft:flint_and_steel").getString();
         	String endItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Item to Unlock the End", "minecraft:ender_eye").getString();
         	useKeys = config.get(Configuration.CATEGORY_GENERAL, "Use keys rather than Items specified above", false).getBoolean();
+			netherLock = config.get(Configuration.CATEGORY_GENERAL, "Lock the nether", true).getBoolean();
+			endLock = config.get(Configuration.CATEGORY_GENERAL, "Lock the end", true).getBoolean();
         	config.save();
 
 			if (!useKeys) {
@@ -61,20 +67,21 @@ public class RestrictedPortals {
 				endItem = GameRegistry.findItem(endSplit[0], endSplit[1]);
 				netherItem = GameRegistry.findItem(netherSplit[0], netherSplit[1]);
 			}else{
-
-				GameRegistry.registerItem(endKey, "endKey");
-				GameRegistry.registerItem(netherKey, "netherKey");
+				if (endLock)
+					GameRegistry.registerItem(endKey, "endKey");
+				if (netherLock)
+					GameRegistry.registerItem(netherKey, "netherKey");
 
 				endItem = RestrictedPortals.endKey;
 				netherItem = RestrictedPortals.netherKey;
 			}
 
 			//If Configuration is invalid
-			if (endItem == null){
+			if (endLock && endItem == null){
 				endItem = Items.ender_eye;
 				logger.info("Please fix the End Item in the Config");
 			}
-			if (netherItem == null){
+			if (netherLock && netherItem == null){
 				netherItem = Items.flint_and_steel;
 				logger.info("Please fix the Nether Item in the Config");
 			}
@@ -85,11 +92,21 @@ public class RestrictedPortals {
 			MinecraftForge.EVENT_BUS.register(tickHandler);
     
 			//Achievements
-			netherUnlock = new Achievement("achievement.netherUnlock", "netherUnlock", 0, 0, netherItem, null).initIndependentStat().registerStat();
-			endUnlock = new Achievement("achievement.endUnlock", "endUnlock", 1, 0, endItem, netherUnlock).initIndependentStat().registerStat();
-			AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", new Achievement[]{netherUnlock, endUnlock}));
-	
-
+			ArrayList<Achievement> achievements = new ArrayList<>();
+			
+			if (netherLock) {
+				netherUnlock = new Achievement("achievement.netherUnlock", "netherUnlock", 0, 0, netherItem, null).initIndependentStat().registerStat();
+				achievements.add(netherUnlock);
+			}
+			if (endLock) {
+				endUnlock = new Achievement("achievement.endUnlock", "endUnlock", 1, 0, endItem, netherLock ? netherUnlock : null).initIndependentStat().registerStat();
+				achievements.add(endUnlock);
+			}
+			if (achievements.size() == 0) {
+				logger.warn("Neither the nether nor the end are locked. You are using this mod why again?");
+			} else {
+				AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", achievements.toArray(new Achievement[achievements.size()])));
+			}
 
 		}
 
@@ -97,13 +114,17 @@ public class RestrictedPortals {
 		public void load(FMLInitializationEvent event) {
 	
 			//Temporary Naming based on config
-			LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(netherItem.getUnlocalizedName() + ".name"));
-			LanguageRegistry.instance().addStringLocalization("achievement.endUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(endItem.getUnlocalizedName() + ".name"));
+			if (netherLock)
+				LanguageRegistry.instance().addStringLocalization("achievement.netherUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(netherItem.getUnlocalizedName() + ".name"));
+			if (endLock)
+				LanguageRegistry.instance().addStringLocalization("achievement.endUnlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(endItem.getUnlocalizedName() + ".name"));
 
 			if(useKeys) {
 				//Recipes for Keys
-				GameRegistry.addShapelessRecipe(new ItemStack(endKey), new ItemStack(Items.ender_eye));
-				GameRegistry.addShapelessRecipe(new ItemStack(netherKey), new ItemStack(Items.flint_and_steel));
+				if (endLock)
+					GameRegistry.addShapelessRecipe(new ItemStack(endKey), new ItemStack(Items.ender_eye));
+				if (netherLock)
+					GameRegistry.addShapelessRecipe(new ItemStack(netherKey), new ItemStack(Items.flint_and_steel));
 			}
 		}
 

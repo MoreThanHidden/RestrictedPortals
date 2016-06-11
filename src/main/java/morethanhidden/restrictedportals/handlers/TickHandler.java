@@ -67,11 +67,11 @@ public class TickHandler {
 	{
 		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
 		{
-			if (FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.netherItem)
+			if (RestrictedPortals.netherLock && FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.netherItem)
 			{
 				event.entityPlayer.addStat(RestrictedPortals.netherUnlock, 1);
 			}
-			if (FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.end_portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.endItem)
+			if (RestrictedPortals.endLock && FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.end_portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.endItem)
 			{
 				event.entityPlayer.addStat(RestrictedPortals.endUnlock, 1);
 			}
@@ -86,13 +86,13 @@ public class TickHandler {
 		if (e.before.dim != e.entityPlayer.dimension){
 			
 		//Nether
-		if (e.entityPlayer.dimension == -1 && ! player.func_147099_x().hasAchievementUnlocked(RestrictedPortals.netherUnlock)){
+		if (RestrictedPortals.netherLock && e.entityPlayer.dimension == -1 && ! player.func_147099_x().hasAchievementUnlocked(RestrictedPortals.netherUnlock)){
 			player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to make a " + StatCollector.translateToLocal(RestrictedPortals.netherItem.getUnlocalizedName() + ".name") + " first"));
 			e.setCanceled(true);
 		}
 		
 		//End
-		if (e.entityPlayer.dimension == 1 && ! player.func_147099_x().hasAchievementUnlocked(RestrictedPortals.endUnlock)){
+		if (RestrictedPortals.endLock && e.entityPlayer.dimension == 1 && ! player.func_147099_x().hasAchievementUnlocked(RestrictedPortals.endUnlock)){
 			player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to make a " + StatCollector.translateToLocal(RestrictedPortals.endItem.getUnlocalizedName() + ".name") + " first"));
 			e.setCanceled(true);
 		}

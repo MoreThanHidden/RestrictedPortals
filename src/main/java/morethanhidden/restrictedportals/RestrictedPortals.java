@@ -7,7 +7,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,15 +79,6 @@ public class RestrictedPortals {
 			//Achievements
 			AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
 
-		}
-
-		@Mod.EventHandler
-		public void load(FMLInitializationEvent event) {
-			for (int i = 0; i < nameSplit.length; i++) {
-				//Temporary Naming based on config
-				LanguageRegistry.instance().addStringLocalization("achievement." + nameSplit[i] + "Unlock", "en_US", nameSplit[i] + " Unlocked");
-				LanguageRegistry.instance().addStringLocalization("achievement." + nameSplit[i] + "Unlock.desc", "en_US", "Craft a " + StatCollector.translateToLocal(itemList[i].getUnlocalizedName() + ".name"));
-			}
 		}
 
 }

@@ -8,9 +8,11 @@ import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.server.gui.StatsComponent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -44,12 +46,12 @@ public class TickHandler {
 					BlockPos coordinates = player.getBedLocation(0);
 					if (coordinates == null){ coordinates = player.worldObj.getSpawnPoint(); }
 
-					player.travelToDimension(1);
+					player.changeDimension(1);
         			player.setPositionAndUpdate(coordinates.getX(), coordinates.getY() + 1, coordinates.getZ());
         			
                 }else{            	
-                	MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, before.getDim());
-                	player.playerNetServerHandler.setPlayerLocation(before.getX(), before.getY(), before.getZ(), before.getYaw(), before.getPitch());
+                	player.changeDimension(before.getDim());
+                	player.setLocationAndAngles(before.getX(), before.getY(), before.getZ(), before.getYaw(), before.getPitch());
             	}
             }
         }
@@ -62,12 +64,12 @@ public class TickHandler {
 	@SubscribeEvent
 	public void onPlayerMoveEvent(PlayerMoveEvent e) {
 
-		EntityPlayerMP player = (EntityPlayerMP) e.entityPlayer;
+		EntityPlayerMP player = (EntityPlayerMP) e.getEntityPlayer();
 
-		if (e.before.dim != e.entityPlayer.dimension) {
+		if (e.before.dim != player.dimension) {
 			for (int i = 0; i < RestrictedPortals.idSplit.length; i++) {
-				if (e.entityPlayer.dimension == Integer.parseInt(RestrictedPortals.idSplit[i].trim()) && !player.getStatFile().hasAchievementUnlocked(RestrictedPortals.portalUnlock[i])) {
-					player.addChatComponentMessage(new ChatComponentTranslation("Sorry, You need to craft a " + StatCollector.translateToLocal(RestrictedPortals.itemList[i].getUnlocalizedName() + ".name") + " first"));
+				if (player.dimension == Integer.parseInt(RestrictedPortals.idSplit[i].trim()) && !player.getStatFile().hasAchievementUnlocked(RestrictedPortals.portalUnlock[i])) {
+					player.addChatComponentMessage(new TextComponentTranslation("Sorry, You need to craft a " + I18n.translateToLocal(RestrictedPortals.itemList[i].getUnlocalizedName() + ".name") + " first"));
 					e.setCanceled(true);
 				}
 			}

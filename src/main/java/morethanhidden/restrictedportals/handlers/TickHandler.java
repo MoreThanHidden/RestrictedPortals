@@ -67,11 +67,11 @@ public class TickHandler {
 	{
 		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
 		{
-			if (RestrictedPortals.netherLock && FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.netherItem)
+			if (RestrictedPortals.netherLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.netherItem)
 			{
 				event.entityPlayer.addStat(RestrictedPortals.netherUnlock, 1);
 			}
-			if (RestrictedPortals.endLock && FMLClientHandler.instance().getClient().theWorld.getBlock(event.x, event.y, event.z) == Blocks.end_portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.endItem)
+			if (RestrictedPortals.endLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.end_portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.endItem)
 			{
 				event.entityPlayer.addStat(RestrictedPortals.endUnlock, 1);
 			}

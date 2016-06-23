@@ -3,10 +3,14 @@ package morethanhidden.restrictedportals;
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
 
+import net.minecraft.client.resources.Language;
+import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
+import net.minecraft.stats.IStatStringFormat;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -21,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 
-@Mod(modid="RestrictedPortals", name="Restricted Portals", version="1.9.4-0.5")
+@Mod(modid="RestrictedPortals", name="Restricted Portals", version="1.9.4-0.5.2")
 public class RestrictedPortals {
 
 	@Mod.Instance(value = "RestrictedPortals")
@@ -56,14 +60,26 @@ public class RestrictedPortals {
 
 			//Basic Configuration Check
 			for (int i = 0; i < nameSplit.length; i++) {
-				String[] itemSplit = craftSplit[i].split(":");
+				final String[] itemSplit = craftSplit[i].split(":");
+
+				//Item
 				itemList[i] = (GameRegistry.findItem(itemSplit[0], itemSplit[1]));
+				//Block
+				if (itemList[i] == null){itemList[i] = Item.getItemFromBlock(GameRegistry.findBlock(itemSplit[0], itemSplit[1]));}
+
 				if(idSplit[i].equals("")){
 					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");
 				}else if (itemList[i] == null){
 					logger.info("Please fix the " + nameSplit[i] + " Item in the Config");
 				}else{
-					portalUnlock[i] = new Achievement("achievement." + nameSplit[i] + "Unlock", nameSplit[i] + "Unlock", i, 0, itemList[i], null).initIndependentStat().registerStat();
+					final int finalI = i;
+					portalUnlock[i] = new Achievement("rpunlock." + nameSplit[i],"rpunlock." + nameSplit[i] , i, 0, itemList[i], null).initIndependentStat().registerStat().setStatStringFormatter(new IStatStringFormat() {
+						//Dynamic achievement description based on item
+						@Override
+						public String formatString(String str) {
+								return I18n.translateToLocal("achievement.rpunlock.desc") + " " +  I18n.translateToLocal(itemList[finalI].getUnlocalizedName() + ".name");
+						}
+					});
 				}
 			}
 

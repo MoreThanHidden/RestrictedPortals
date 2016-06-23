@@ -1,6 +1,3 @@
-achievement.NetherUnlock=Nether Unlocked!
-achievement.EndUnlock=End Unlocked!
-achievement.NetherUnlock.desc=Craft a Flint and Steel
-achievement.EndUnlock.desc=Craft an Eye of Ender
-item.NetherKey.name=Nether Key
-item.EndKey.name=End Key
+achievement.rpunlock.Nether=Nether Unlocked!
+achievement.rpunlock.End=End Unlocked!
+achievement.rpunlock.desc=Craft a

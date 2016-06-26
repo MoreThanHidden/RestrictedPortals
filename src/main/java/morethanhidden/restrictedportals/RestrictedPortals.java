@@ -5,15 +5,17 @@ import morethanhidden.restrictedportals.handlers.TickHandler;
 
 
 import morethanhidden.restrictedportals.util.StringFormatter;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,19 +33,23 @@ public class RestrictedPortals {
 	public static String[] idSplit;
 	public static Item[] itemList;
 	public String[] nameSplit;
+	public Configuration config;
 
 	@Mod.EventHandler
-		public void preInit(FMLPreInitializationEvent event) {
+	public void preinit(FMLPreInitializationEvent event){
+		config = new Configuration(event.getSuggestedConfigurationFile());
+	}
 
-			Configuration config = new Configuration(event.getSuggestedConfigurationFile());
-			
+	@Mod.EventHandler
+		public void Init(FMLInitializationEvent event) {
+
+		// Configuration
 			config.load();
-			
-        	// Configuration
-        	String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
-		    String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
-        	String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
-        	config.save();
+			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
+			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
+			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
+
+			config.save();
 
 			String[] craftSplit = craftItemRaw.split(",");
 			nameSplit = dimNameRaw.split(",");
@@ -54,12 +60,12 @@ public class RestrictedPortals {
 
 			//Basic Configuration Check
 			for (int i = 0; i < nameSplit.length; i++) {
-				String[] itemSplit = craftSplit[i].split(":");
-
 				//Item
-				itemList[i] = (GameRegistry.findItem(itemSplit[0], itemSplit[1]));
+				itemList[i] = Item.REGISTRY.getObject(new ResourceLocation(craftSplit[i]));
 				//Block
-				if (itemList[i] == null){itemList[i] = Item.getItemFromBlock(GameRegistry.findBlock(itemSplit[0], itemSplit[1]));}
+				if (itemList[i] == null){
+					itemList[i] = Item.getItemFromBlock(Block.REGISTRY.getObject(new ResourceLocation(craftSplit[i])));
+				}
 
 				if(idSplit[i].equals("")){
 					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");

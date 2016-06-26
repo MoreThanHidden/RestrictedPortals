@@ -21,7 +21,7 @@ version = "1.9.4-0.5.3"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "RestrictedPortals"
 minecraft {
-    version = "1.9.4-12.17.0.1950"
+    version = "1.9.4-12.17.0.1957"
     runDir = "run"
     mappings = "snapshot_20160610"
 }

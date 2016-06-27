@@ -7,6 +7,7 @@ import morethanhidden.restrictedportals.handlers.TickHandler;
 import morethanhidden.restrictedportals.util.StringFormatter;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.AchievementPage;
@@ -21,7 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid="RestrictedPortals", name="Restricted Portals", version="1.9.4-0.5.3")
+@Mod(modid="RestrictedPortals", name="Restricted Portals", version="1.9.4-0.5.5")
 public class RestrictedPortals {
 
 	@Mod.Instance(value = "RestrictedPortals")
@@ -31,7 +32,8 @@ public class RestrictedPortals {
 
 	public static Achievement[] portalUnlock;
 	public static String[] idSplit;
-	public static Item[] itemList;
+	public static ItemStack[] itemList;
+    public static boolean[] metaUsed;
 	public String[] nameSplit;
 	public Configuration config;
 
@@ -55,17 +57,30 @@ public class RestrictedPortals {
 			nameSplit = dimNameRaw.split(",");
 			idSplit = dimIDRaw.split(",");
 
-			itemList = new Item[nameSplit.length];
+			itemList = new ItemStack[nameSplit.length];
 			portalUnlock = new Achievement[nameSplit.length];
+            metaUsed = new boolean[nameSplit.length];
 
 			//Basic Configuration Check
 			for (int i = 0; i < nameSplit.length; i++) {
-				//Item
-				itemList[i] = Item.REGISTRY.getObject(new ResourceLocation(craftSplit[i]));
-				//Block
-				if (itemList[i] == null){
-					itemList[i] = Item.getItemFromBlock(Block.REGISTRY.getObject(new ResourceLocation(craftSplit[i])));
-				}
+
+				String[] itemsplit = craftSplit[i].split(":");
+
+                int meta = 0;
+                metaUsed[i] = false;
+
+                if (itemsplit.length == 3){
+                    meta = Integer.parseInt(itemsplit[2]);
+                    metaUsed[i] = true;
+                }
+
+                Item item = Item.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1]));
+
+				if (item != null){
+                    itemList[i] = new ItemStack(item, 0, meta);
+				}else {
+                    itemList[i] = new ItemStack(Block.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1])), 0, meta);
+                }
 
 				if(idSplit[i].equals("")){
 					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");

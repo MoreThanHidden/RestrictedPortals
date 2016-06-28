@@ -14,10 +14,10 @@ public class CraftingHandler
     public void onCrafting(PlayerEvent.ItemCraftedEvent event)
     {
         for(int i = 0; i < RestrictedPortals.idSplit.length; i++){
-    	    if (event.crafting.getItem() == RestrictedPortals.itemList[i])
-            {
-                event.player.addStat(RestrictedPortals.portalUnlock[i], 1);
-            
+    	    if (event.crafting.getItem() == RestrictedPortals.itemList[i].getItem()){
+                if ((event.crafting.getMetadata() == RestrictedPortals.itemList[i].getMetadata()) || !RestrictedPortals.metaUsed[i]) {
+                    event.player.addStat(RestrictedPortals.portalUnlock[i], 1);
+                }
             }
         }
     }

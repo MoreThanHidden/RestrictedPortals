@@ -17,11 +17,11 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.9.4-0.5.5"
+version = "1.9.4-0.5.6"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "RestrictedPortals"
 minecraft {
-    version = "1.9.4-12.17.0.1957"
+    version = "1.9.4-12.17.0.1965"
     runDir = "run"
     mappings = "snapshot_20160610"
 }

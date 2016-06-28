@@ -12,7 +12,7 @@ public class StringFormatter {
         return new IStatStringFormat() {
             @Override
             public String formatString(String s) {
-                return I18n.translateToLocal("achievement.rpunlock.desc") + " " +  I18n.translateToLocal(item.getUnlocalizedName() + ".name");
+                return I18n.translateToLocal("achievement.rpunlock.desc") + " " + item.getDisplayName();
 
             }
         };

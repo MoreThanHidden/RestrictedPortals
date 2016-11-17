@@ -1,26 +1,22 @@
 package morethanhidden.restrictedportals.handlers;
 
-import java.util.HashMap;
-import java.util.UUID;
-
 import morethanhidden.restrictedportals.RestrictedPortals;
 import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.gui.StatsComponent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 public class TickHandler {
 	
-	private HashMap<UUID, PlayerPos> lastPlayerPosition = new HashMap();
+	private HashMap<UUID, PlayerPos> lastPlayerPosition = new HashMap<UUID, PlayerPos>();
 	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event)
@@ -33,7 +29,7 @@ public class TickHandler {
 		PlayerPos before = lastPlayerPosition.get(player.getPersistentID());
 		PlayerPos current = new PlayerPos(event.player);
 		
-		if (before != null && !player.isDead && player.worldObj != null && !before.equals(current))
+		if (before != null && !player.isDead && player.world != null && !before.equals(current))
         {
 			
             PlayerMoveEvent moveEvent = new PlayerMoveEvent(player, before, current);
@@ -44,7 +40,7 @@ public class TickHandler {
             	if (current.dim == 1){
 
 					BlockPos coordinates = player.getBedLocation(0);
-					if (coordinates == null){ coordinates = player.worldObj.getSpawnPoint(); }
+					if (coordinates == null){ coordinates = player.world.getSpawnPoint(); }
 
 					player.changeDimension(1);
         			player.setPositionAndUpdate(coordinates.getX(), coordinates.getY() + 1, coordinates.getZ());
@@ -69,7 +65,7 @@ public class TickHandler {
 		if (e.before.dim != player.dimension) {
 			for (int i = 0; i < RestrictedPortals.idSplit.length; i++) {
 				if (player.dimension == Integer.parseInt(RestrictedPortals.idSplit[i].trim()) && !player.getStatFile().hasAchievementUnlocked(RestrictedPortals.portalUnlock[i])) {
-					player.addChatComponentMessage(new TextComponentTranslation("Sorry, You need to craft a " + RestrictedPortals.itemList[i].getDisplayName() + " first"));
+					player.addChatComponentMessage(new TextComponentTranslation("Sorry, You need to craft a " + RestrictedPortals.itemList[i].getDisplayName() + " first"), false);
 					e.setCanceled(true);
 				}
 			}

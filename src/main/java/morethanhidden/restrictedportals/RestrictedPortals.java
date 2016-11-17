@@ -2,10 +2,9 @@ package morethanhidden.restrictedportals;
 
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
-
-
 import morethanhidden.restrictedportals.util.StringFormatter;
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
@@ -22,13 +21,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid="RestrictedPortals", name="Restricted Portals", version="1.9.4-0.5.6")
+@Mod(modid="restrictedportals", name="Restricted Portals", version="1.11-0.5.7")
 public class RestrictedPortals {
 
-	@Mod.Instance(value = "RestrictedPortals")
+	@Mod.Instance(value = "restrictedprtals")
 	public static RestrictedPortals instance;
 	
-	public static Logger logger = LogManager.getLogger("RestrictedPortals");
+	public static Logger logger = LogManager.getLogger("restrictedportals");
 
 	public static Achievement[] portalUnlock;
 	public static String[] idSplit;
@@ -59,7 +58,6 @@ public class RestrictedPortals {
 
 			itemList = new ItemStack[nameSplit.length];
 			portalUnlock = new Achievement[nameSplit.length];
-            metaUsed = new boolean[nameSplit.length];
 
 			//Basic Configuration Check
 			for (int i = 0; i < nameSplit.length; i++) {
@@ -67,45 +65,39 @@ public class RestrictedPortals {
 				String[] itemsplit = craftSplit[i].split(":");
 
                 int meta = 0;
-                metaUsed[i] = false;
 
                 if (itemsplit.length == 3){
                     meta = Integer.parseInt(itemsplit[2]);
-                    metaUsed[i] = true;
                 }
 
                 Item item = Item.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1]));
 
-				if (item != null){
-                    itemList[i] = new ItemStack(item, 0, meta);
+				if (item != null && item != Items.field_190931_a){
+                    itemList[i] = new ItemStack(item, 1, meta);
 				}else {
-                    itemList[i] = new ItemStack(Block.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1])), 0, meta);
+                    itemList[i] = new ItemStack(Block.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1])), 1, meta);
                 }
 
 				if(idSplit[i].equals("")){
 					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");
-				}else if (itemList[i] == null){
+				}else if (itemList[i] ==  null || itemList[i].func_190926_b()){
 					logger.info("Please fix the " + nameSplit[i] + " Item in the Config");
-				}else{
-					portalUnlock[i] = new Achievement("rpunlock." + nameSplit[i],"rpunlock." + nameSplit[i] , i, 0, itemList[i], null).initIndependentStat().registerStat();
-					if(event.getSide() != Side.SERVER){
-						portalUnlock[i].setStatStringFormatter(StringFormatter.format(itemList[i]));
-					}
+				}
+				portalUnlock[i] = new Achievement("rpunlock." + nameSplit[i],"rpunlock." + nameSplit[i] , i, 0, itemList[i], null).initIndependentStat().registerStat();
+				if(event.getSide() != Side.SERVER){
+					portalUnlock[i].setStatStringFormatter(StringFormatter.format(itemList[i]));
 				}
 			}
-
+			    //Register Tick Handler
+			    TickHandler tickHandler = new TickHandler();
+			    FMLCommonHandler.instance().bus().register(tickHandler);
+			    MinecraftForge.EVENT_BUS.register(tickHandler);
 				
-			//Register Tick Handler
-			TickHandler tickHandler = new TickHandler();
-			FMLCommonHandler.instance().bus().register(tickHandler);
-			MinecraftForge.EVENT_BUS.register(tickHandler);
-				
-    		//Register Crafting Handler
-			FMLCommonHandler.instance().bus().register(new CraftingHandler());
-    
-			//Achievements
-			AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
+    		    //Register Crafting Handler
+			    FMLCommonHandler.instance().bus().register(new CraftingHandler());
 
+				//Achievements
+				AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
 		}
 }
 

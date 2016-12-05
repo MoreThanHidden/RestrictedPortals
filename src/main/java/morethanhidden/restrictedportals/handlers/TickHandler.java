@@ -65,7 +65,7 @@ public class TickHandler {
 		if (e.before.dim != player.dimension) {
 			for (int i = 0; i < RestrictedPortals.idSplit.length; i++) {
 				if (player.dimension == Integer.parseInt(RestrictedPortals.idSplit[i].trim()) && !player.getStatFile().hasAchievementUnlocked(RestrictedPortals.portalUnlock[i])) {
-					player.addChatComponentMessage(new TextComponentTranslation("Sorry, You need to craft a " + RestrictedPortals.itemList[i].getDisplayName() + " first"), false);
+					player.addChatComponentMessage(new TextComponentTranslation(RestrictedPortals.blockedmessage.replace("%item%", RestrictedPortals.itemList[i].getDisplayName()).replace("%dim%",RestrictedPortals.nameSplit[i])), false);
 					e.setCanceled(true);
 				}
 			}

@@ -4,7 +4,6 @@ import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.TickHandler;
 import morethanhidden.restrictedportals.util.StringFormatter;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
@@ -33,8 +32,9 @@ public class RestrictedPortals {
 	public static String[] idSplit;
 	public static ItemStack[] itemList;
     public static boolean[] metaUsed;
-	public String[] nameSplit;
+	public static String[] nameSplit;
 	public Configuration config;
+	public static String blockedmessage;
 
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent event){
@@ -46,6 +46,7 @@ public class RestrictedPortals {
 
 		// Configuration
 			config.load();
+			blockedmessage = config.get(Configuration.CATEGORY_GENERAL, "Blocked Message", "Please craft a %item% to enter the %dim%").getString();
 			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
 			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
 			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
@@ -72,11 +73,15 @@ public class RestrictedPortals {
 
                 Item item = Item.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1]));
 
-				if (item != null && item != Items.field_190931_a){
+				if (item != null){
                     itemList[i] = new ItemStack(item, 1, meta);
 				}else {
                     itemList[i] = new ItemStack(Block.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1])), 1, meta);
                 }
+
+				if (itemList[i] == null){
+
+				}
 
 				if(idSplit[i].equals("")){
 					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");

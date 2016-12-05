@@ -1,10 +1,6 @@
 package morethanhidden.restrictedportals.handlers;
 
 import morethanhidden.restrictedportals.RestrictedPortals;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 

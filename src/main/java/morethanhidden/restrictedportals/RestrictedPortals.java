@@ -34,7 +34,8 @@ public class RestrictedPortals {
 	public static String[] idSplit;
 	public static ItemStack[] itemList;
     public static boolean[] metaUsed;
-	public String[] nameSplit;
+	public static String blockedmessage;
+	public static String[] nameSplit;
 	public Configuration config;
 
 	@Mod.EventHandler
@@ -47,6 +48,7 @@ public class RestrictedPortals {
 
 		// Configuration
 			config.load();
+			blockedmessage = config.get(Configuration.CATEGORY_GENERAL, "Blocked Message", "Please craft a %item% to enter the %dim%").getString();
 			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
 			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
 			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();

@@ -68,14 +68,19 @@ public class TickHandler {
 		Item item = event.entityPlayer.getHeldItem().getItem();
 		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && item != null)
 		{
-			if (RestrictedPortals.netherLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.portal && item == RestrictedPortals.netherItem)
-			{
+			if (RestrictedPortals.netherLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.portal && item == RestrictedPortals.netherItem) {
 				event.entityPlayer.addStat(RestrictedPortals.netherUnlock, 1);
-			}
-			if (RestrictedPortals.endLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.end_portal && item == RestrictedPortals.endItem)
-			{
+
+			}else if (RestrictedPortals.endLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.end_portal && item == RestrictedPortals.endItem) {
 				event.entityPlayer.addStat(RestrictedPortals.endUnlock, 1);
+			}else{
+				return;
 			}
+
+			if (RestrictedPortals.ConsumeItem) {
+				event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+			}
+
 		}
 	}
 	

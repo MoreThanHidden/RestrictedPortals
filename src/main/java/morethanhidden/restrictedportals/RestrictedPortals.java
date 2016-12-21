@@ -43,6 +43,7 @@ public class RestrictedPortals {
 	public static Item endItem;
 	public static boolean netherLock;
 	public static boolean endLock;
+	public static boolean ConsumeItem;
 	public boolean useKeys;
 
 	@EventHandler
@@ -58,7 +59,8 @@ public class RestrictedPortals {
         	useKeys = config.get(Configuration.CATEGORY_GENERAL, "Use keys rather than Items specified above", false).getBoolean();
 			netherLock = config.get(Configuration.CATEGORY_GENERAL, "Lock the nether", true).getBoolean();
 			endLock = config.get(Configuration.CATEGORY_GENERAL, "Lock the end", true).getBoolean();
-        	config.save();
+			ConsumeItem = config.get(Configuration.CATEGORY_GENERAL, "Consume item on Right Click", false).getBoolean();
+			config.save();
 
 			if (!useKeys) {
 				String[] netherSplit = netherItemRaw.split(":");

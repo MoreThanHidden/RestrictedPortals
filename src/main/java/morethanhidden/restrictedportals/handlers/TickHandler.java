@@ -65,9 +65,10 @@ public class TickHandler {
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent event)
 	{
-		Item item = event.entityPlayer.getHeldItem().getItem();
-		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && item != null)
+
+		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.entityPlayer.getHeldItem() != null)
 		{
+			Item item = event.entityPlayer.getHeldItem().getItem();
 			if (RestrictedPortals.netherLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.portal && item == RestrictedPortals.netherItem) {
 				event.entityPlayer.addStat(RestrictedPortals.netherUnlock, 1);
 

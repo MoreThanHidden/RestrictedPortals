@@ -25,7 +25,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 import java.util.ArrayList;
 
-@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.3")
+@Mod(modid="RestrictedPortals", name="RestrictedPortals", version="0.3.3")
 public class RestrictedPortals {
 
 	@Instance(value = "RestrictedPortals")

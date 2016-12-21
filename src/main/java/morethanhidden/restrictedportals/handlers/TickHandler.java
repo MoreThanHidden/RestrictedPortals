@@ -1,23 +1,23 @@
 package morethanhidden.restrictedportals.handlers;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import morethanhidden.restrictedportals.RestrictedPortals;
 import morethanhidden.restrictedportals.events.PlayerMoveEvent;
 import morethanhidden.restrictedportals.object.PlayerPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public class TickHandler {
 	
@@ -65,13 +65,14 @@ public class TickHandler {
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent event)
 	{
-		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
+		Item item = event.entityPlayer.getHeldItem().getItem();
+		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && item != null)
 		{
-			if (RestrictedPortals.netherLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.netherItem)
+			if (RestrictedPortals.netherLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.portal && item == RestrictedPortals.netherItem)
 			{
 				event.entityPlayer.addStat(RestrictedPortals.netherUnlock, 1);
 			}
-			if (RestrictedPortals.endLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.end_portal && event.entityPlayer.getHeldItem().getItem() == RestrictedPortals.endItem)
+			if (RestrictedPortals.endLock && event.world.getBlock(event.x, event.y, event.z) == Blocks.end_portal && item == RestrictedPortals.endItem)
 			{
 				event.entityPlayer.addStat(RestrictedPortals.endUnlock, 1);
 			}

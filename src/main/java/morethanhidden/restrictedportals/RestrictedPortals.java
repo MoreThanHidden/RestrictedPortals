@@ -20,10 +20,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid="restrictedportals", name="Restricted Portals", version="1.11-0.5.8")
+@Mod(modid="restrictedportals", name="Restricted Portals", version="1.11.2-0.5.9")
 public class RestrictedPortals {
 
-	@Mod.Instance(value = "restrictedprtals")
+	@Mod.Instance(value = "restrictedportals")
 	public static RestrictedPortals instance;
 	
 	public static Logger logger = LogManager.getLogger("restrictedportals");
@@ -46,6 +46,7 @@ public class RestrictedPortals {
 
 		// Configuration
 			config.load();
+			config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Achievement Names currently need to be set in lang, Descriptions are Dynamic.");
 			blockedmessage = config.get(Configuration.CATEGORY_GENERAL, "Blocked Message", "Please craft a %item% to enter the %dim%").getString();
 			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
 			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
@@ -85,7 +86,7 @@ public class RestrictedPortals {
 
 				if(idSplit[i].equals("")){
 					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");
-				}else if (itemList[i] ==  null || itemList[i].func_190926_b()){
+				}else if (itemList[i] ==  null || itemList[i].isEmpty()){
 					logger.info("Please fix the " + nameSplit[i] + " Item in the Config");
 				}
 				portalUnlock[i] = new Achievement("rpunlock." + nameSplit[i],"rpunlock." + nameSplit[i] , i, 0, itemList[i], null).initIndependentStat().registerStat();
@@ -95,11 +96,10 @@ public class RestrictedPortals {
 			}
 			    //Register Tick Handler
 			    TickHandler tickHandler = new TickHandler();
-			    FMLCommonHandler.instance().bus().register(tickHandler);
 			    MinecraftForge.EVENT_BUS.register(tickHandler);
 				
     		    //Register Crafting Handler
-			    FMLCommonHandler.instance().bus().register(new CraftingHandler());
+				MinecraftForge.EVENT_BUS.register(new CraftingHandler());
 
 				//Achievements
 				AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));

@@ -13,7 +13,7 @@ public class CraftingHandler
     {
         for(int i = 0; i < RestrictedPortals.idSplit.length; i++){
     	    if (event.crafting.getItem() == RestrictedPortals.itemList[i].getItem()){
-                if ((event.crafting.getMetadata() == RestrictedPortals.itemList[i].getMetadata()) || !RestrictedPortals.metaUsed[i]) {
+                if (!RestrictedPortals.metaUsed[i] || (event.crafting.getMetadata() == RestrictedPortals.itemList[i].getMetadata())) {
                     event.player.addStat(RestrictedPortals.portalUnlock[i], 1);
                     if(event.player.world.isRemote) {
                         event.player.sendStatusMessage(new TextComponentTranslation(RestrictedPortals.craftedmessage.replace("%dim%", RestrictedPortals.nameSplit[i])), false);

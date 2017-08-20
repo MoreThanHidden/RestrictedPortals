@@ -62,6 +62,7 @@ public class RestrictedPortals {
 
 			itemList = new ItemStack[nameSplit.length];
 			portalUnlock = new StatBase[nameSplit.length];
+			metaUsed = new boolean[nameSplit.length];
 
 			//Basic Configuration Check
 			for (int i = 0; i < nameSplit.length; i++) {
@@ -72,7 +73,10 @@ public class RestrictedPortals {
 
                 if (itemsplit.length == 3){
                     meta = Integer.parseInt(itemsplit[2]);
-                }
+					metaUsed[i] = true;
+                }else{
+					metaUsed[i] = false;
+				}
 
                 Item item = Item.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1]));
 

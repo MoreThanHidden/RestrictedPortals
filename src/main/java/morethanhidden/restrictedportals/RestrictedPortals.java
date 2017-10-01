@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid="restrictedportals", name="Restricted Portals", version="1.12-0.6.1")
+@Mod(modid="restrictedportals", name="Restricted Portals", version="1.12-0.6.2")
 public class RestrictedPortals {
 
 	@Mod.Instance(value = "restrictedportals")
@@ -51,7 +51,7 @@ public class RestrictedPortals {
 			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
 			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
 			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
-			preventEPDeath = config.getBoolean("Prevent Ender Portal Death", Configuration.CATEGORY_GENERAL, true, "Teleports player to Spawn or their bed when trying to enter a Ender portal");
+			preventEPDeath = config.getBoolean("Prevent End Portal Death", Configuration.CATEGORY_GENERAL, true, "Teleports player to Spawn or their bed when trying to enter a End portal");
 
 			config.save();
 

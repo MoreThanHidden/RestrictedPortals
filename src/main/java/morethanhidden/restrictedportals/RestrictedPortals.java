@@ -1,9 +1,7 @@
 package morethanhidden.restrictedportals;
 
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
-import morethanhidden.restrictedportals.handlers.TickHandler;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementManager;
+import morethanhidden.restrictedportals.handlers.EventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,7 +13,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +33,7 @@ public class RestrictedPortals {
 	public Configuration config;
 	public static String blockedmessage;
 	public static String craftedmessage;
+	public static boolean preventEPDeath;
 
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent event){
@@ -47,12 +45,13 @@ public class RestrictedPortals {
 
 		// Configuration
 			config.load();
-			config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Achievement Names currently need to be set in lang, Descriptions are Dynamic.");
+
 			blockedmessage = config.get(Configuration.CATEGORY_GENERAL, "Blocked Message", "Please craft a %item% to enter the %dim%").getString();
 			craftedmessage = config.get(Configuration.CATEGORY_GENERAL, "Crafted Message", "%dim% Unlocked!").getString();
 			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
 			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
 			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
+			preventEPDeath = config.getBoolean("Prevent Ender Portal Death", Configuration.CATEGORY_GENERAL, true, "Teleports player to Spawn or their bed when trying to enter a Ender portal");
 
 			config.save();
 
@@ -98,9 +97,9 @@ public class RestrictedPortals {
 				portalUnlock[i] = new StatBase("rpunlock." + nameSplit[i], new TextComponentString("rpunlock." + nameSplit[i])).initIndependentStat().registerStat();
 
 			}
-			    //Register Tick Handler
-			    TickHandler tickHandler = new TickHandler();
-			    MinecraftForge.EVENT_BUS.register(tickHandler);
+			    //Register Event Handler
+			    EventHandler eventHandler = new EventHandler();
+			    MinecraftForge.EVENT_BUS.register(eventHandler);
 				
     		    //Register Crafting Handler
 				MinecraftForge.EVENT_BUS.register(new CraftingHandler());

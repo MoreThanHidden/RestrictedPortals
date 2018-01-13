@@ -1,6 +1,7 @@
 package morethanhidden.restrictedportals.handlers;
 
 import morethanhidden.restrictedportals.RestrictedPortals;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -23,8 +24,9 @@ public class EventHandler {
 				if (event.getDimension() == Integer.parseInt(RestrictedPortals.idSplit[i].trim()) && playerMP.getStatFile().readStat(RestrictedPortals.portalUnlock[i]) == 0) {
 					//Prevent Spam
 				    if(!sentMessage.containsKey(playerMP.getUniqueID()) || (playerMP.world.getWorldTime() - sentMessage.get(playerMP.getUniqueID())) > 40 ) {
-						playerMP.sendStatusMessage(new TextComponentTranslation(RestrictedPortals.blockedmessage.replace("%item%", RestrictedPortals.itemList[i].getDisplayName()).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
-						sentMessage.put(playerMP.getUniqueID(), playerMP.world.getWorldTime());
+						if(!playerMP.world.isRemote)
+				    		playerMP.sendStatusMessage(new TextComponentTranslation(RestrictedPortals.blockedmessage.replace("%item%", RestrictedPortals.itemList[i].getDisplayName()).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
+				    	sentMessage.put(playerMP.getUniqueID(), playerMP.world.getWorldTime());
 					}
 					//Prevent Death by Lava for End Portal
 					if(event.getDimension() == 1 && RestrictedPortals.preventEPDeath){

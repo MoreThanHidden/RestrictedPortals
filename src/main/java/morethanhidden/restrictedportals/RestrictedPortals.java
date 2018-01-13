@@ -16,6 +16,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Mod(modid="restrictedportals", name="Restricted Portals", version="1.12-0.6.2")
 public class RestrictedPortals {
@@ -28,12 +31,14 @@ public class RestrictedPortals {
 	public static StatBase[] portalUnlock;
 	public static String[] idSplit;
 	public static ItemStack[] itemList;
+	public static List<Block> pblockwhitelist = new ArrayList<>();
     public static boolean[] metaUsed;
 	public static String[] nameSplit;
 	public Configuration config;
 	public static String blockedmessage;
 	public static String craftedmessage;
 	public static boolean preventEPDeath;
+	public static boolean consumed;
 
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent event){
@@ -52,12 +57,16 @@ public class RestrictedPortals {
 			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
 			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
 			preventEPDeath = config.getBoolean("Prevent End Portal Death", Configuration.CATEGORY_GENERAL, true, "Teleports player to Spawn or their bed when trying to enter a End portal");
+			consumed = config.getBoolean("Consume item rather than craft", Configuration.CATEGORY_GENERAL, false, "Right Click item on Portal Rather than Craft");
+            String pblockwhitelistRaw = config.get(Configuration.CATEGORY_GENERAL, "Consumable Portal Block Whitelist", "minecraft:portal,minecraft:end_portal").getString();
 
 			config.save();
 
 			String[] craftSplit = craftItemRaw.split(",");
 			nameSplit = dimNameRaw.split(",");
 			idSplit = dimIDRaw.split(",");
+
+            String[] pblockwhitelistSplit = pblockwhitelistRaw.split(",");
 
 			itemList = new ItemStack[nameSplit.length];
 			portalUnlock = new StatBase[nameSplit.length];
@@ -97,15 +106,20 @@ public class RestrictedPortals {
 				portalUnlock[i] = new StatBase("rpunlock." + nameSplit[i], new TextComponentString("rpunlock." + nameSplit[i])).initIndependentStat().registerStat();
 
 			}
-			    //Register Event Handler
-			    EventHandler eventHandler = new EventHandler();
-			    MinecraftForge.EVENT_BUS.register(eventHandler);
-				
-    		    //Register Crafting Handler
-				MinecraftForge.EVENT_BUS.register(new CraftingHandler());
 
-				//Achievements
-				//AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
+            for (String pblock : pblockwhitelistSplit) {
+               pblockwhitelist.add(Block.REGISTRY.getObject(new ResourceLocation(pblock.trim())));
+            }
+
+            //Register Event Handler
+            EventHandler eventHandler = new EventHandler();
+            MinecraftForge.EVENT_BUS.register(eventHandler);
+				
+            //Register Crafting Handler
+			MinecraftForge.EVENT_BUS.register(new CraftingHandler());
+
+			//Achievements
+			//AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
 
 
 		}

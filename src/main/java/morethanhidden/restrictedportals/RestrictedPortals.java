@@ -1,18 +1,24 @@
 package morethanhidden.restrictedportals;
 
+import morethanhidden.restrictedportals.handlers.ConfigHandler;
 import morethanhidden.restrictedportals.handlers.CraftingHandler;
 import morethanhidden.restrictedportals.handlers.EventHandler;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementList;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.*;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,109 +26,90 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Mod(modid="restrictedportals", name="Restricted Portals", version="1.12-0.6.3")
+@Mod("restrictedportals")
 public class RestrictedPortals {
 
-	@Mod.Instance(value = "restrictedportals")
-	public static RestrictedPortals instance;
-	
-	public static Logger logger = LogManager.getLogger("restrictedportals");
-
-	public static StatBase[] portalUnlock;
 	public static String[] idSplit;
+	public static String[] nameSplit;
+	public static Stat[] portalUnlock;
 	public static ItemStack[] itemList;
 	public static List<Block> pblockwhitelist = new ArrayList<>();
-    public static boolean[] metaUsed;
-	public static String[] nameSplit;
-	public Configuration config;
-	public static String blockedmessage;
-	public static String craftedmessage;
-	public static boolean preventEPDeath;
-	public static boolean consumed;
+	public static boolean[] metaUsed;
 
-	@Mod.EventHandler
-	public void preinit(FMLPreInitializationEvent event){
-		config = new Configuration(event.getSuggestedConfigurationFile());
+	public static Logger logger = LogManager.getLogger("restrictedportals");
+
+	public RestrictedPortals() {
+
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.spec);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigHandler.spec);
+
+		// Register the setup method for modloading
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+
+		//Register Event Handler
+		EventHandler eventHandler = new EventHandler();
+		MinecraftForge.EVENT_BUS.register(eventHandler);
+
+		//Register Crafting Handler
+		MinecraftForge.EVENT_BUS.register(new CraftingHandler());
+
+		//Achievements
+		//AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
+
+		// Register ourselves for server, registry and other game events we are interested in
+		MinecraftForge.EVENT_BUS.register(this);
+
 	}
 
-	@Mod.EventHandler
-		public void Init(FMLInitializationEvent event) {
+	private void setup(final FMLCommonSetupEvent event){
 
-		// Configuration
-			config.load();
+		idSplit = ConfigHandler.GENERAL.dimIDs.get().split(",");
+		nameSplit = ConfigHandler.GENERAL.dimNames.get().split(",");
 
-			blockedmessage = config.get(Configuration.CATEGORY_GENERAL, "Blocked Message", "Please craft a %item% to enter the %dim%").getString();
-			craftedmessage = config.get(Configuration.CATEGORY_GENERAL, "Crafted Message", "%dim% Unlocked!").getString();
-			String craftItemRaw = config.get(Configuration.CATEGORY_GENERAL, "Crafted Items", "minecraft:flint_and_steel,minecraft:ender_eye").getString();
-			String dimNameRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension Names", "Nether,End").getString();
-			String dimIDRaw = config.get(Configuration.CATEGORY_GENERAL, "Dimension IDs", "-1,1").getString();
-			preventEPDeath = config.getBoolean("Prevent End Portal Death", Configuration.CATEGORY_GENERAL, true, "Teleports player to Spawn or their bed when trying to enter a End portal");
-			consumed = config.getBoolean("Consume item rather than craft", Configuration.CATEGORY_GENERAL, false, "Right Click item on Portal Rather than Craft");
-            String pblockwhitelistRaw = config.get(Configuration.CATEGORY_GENERAL, "Consumable Portal Block Whitelist", "minecraft:portal,minecraft:end_portal").getString();
+		itemList = new ItemStack[idSplit.length];
+		portalUnlock = new Stat[idSplit.length];
+		metaUsed = new boolean[idSplit.length];
 
-			config.save();
+		String[] craftSplit = ConfigHandler.GENERAL.craftItems.get().split(",");
+		String[] pblockwhitelistSplit = ConfigHandler.GENERAL.pblockwhitelist.get().split(",");
 
-			String[] craftSplit = craftItemRaw.split(",");
-			nameSplit = dimNameRaw.split(",");
-			idSplit = dimIDRaw.split(",");
+		//Basic Configuration Check
+		for (int i = 0; i < idSplit.length; i++) {
 
-            String[] pblockwhitelistSplit = pblockwhitelistRaw.split(",");
+			String[] itemsplit = craftSplit[i].split(":");
 
-			itemList = new ItemStack[nameSplit.length];
-			portalUnlock = new StatBase[nameSplit.length];
-			metaUsed = new boolean[nameSplit.length];
+			if (itemsplit.length == 3){
+				metaUsed[i] = true;
+			}else{
+				metaUsed[i] = false;
+			}
 
-			//Basic Configuration Check
-			for (int i = 0; i < nameSplit.length; i++) {
+			Item item = GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation(itemsplit[0], itemsplit[1]));
 
-				String[] itemsplit = craftSplit[i].split(":");
+			if (item != null){
+				itemList[i] = new ItemStack(item, 1);
+			}else {
+				itemList[i] = new ItemStack(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(itemsplit[0], itemsplit[1])), 1);
+			}
 
-                int meta = 0;
-
-                if (itemsplit.length == 3){
-                    meta = Integer.parseInt(itemsplit[2]);
-					metaUsed[i] = true;
-                }else{
-					metaUsed[i] = false;
-				}
-
-                Item item = Item.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1]));
-
-				if (item != null){
-                    itemList[i] = new ItemStack(item, 1, meta);
-				}else {
-                    itemList[i] = new ItemStack(Block.REGISTRY.getObject(new ResourceLocation(itemsplit[0], itemsplit[1])), 1, meta);
-                }
-
-				if (itemList[i] == null){
-
-				}
-
-				if(idSplit[i].equals("")){
-					logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");
-				}else if (itemList[i] ==  null || itemList[i].isEmpty()){
-					logger.info("Please fix the " + nameSplit[i] + " Item in the Config");
-				}
-				portalUnlock[i] = new StatBase("rpunlock." + nameSplit[i], new TextComponentString("rpunlock." + nameSplit[i])).initIndependentStat().registerStat();
+			if (itemList[i] == null){
 
 			}
 
-            for (String pblock : pblockwhitelistSplit) {
-               pblockwhitelist.add(Block.REGISTRY.getObject(new ResourceLocation(pblock.trim())));
-            }
-
-            //Register Event Handler
-            EventHandler eventHandler = new EventHandler();
-            MinecraftForge.EVENT_BUS.register(eventHandler);
-				
-            //Register Crafting Handler
-			MinecraftForge.EVENT_BUS.register(new CraftingHandler());
-
-			//Achievements
-			//AchievementPage.registerAchievementPage(new AchievementPage("Restricted Portals", portalUnlock));
-
+			if(idSplit[i].equals("")){
+				logger.info("Please fix the " + nameSplit[i] + " Dimension ID in the Config");
+			}else if (itemList[i] ==  null || itemList[i].isEmpty()){
+				logger.info("Please fix the " + nameSplit[i] + " Item in the Config");
+			}
 
 		}
+
+		for (String pblock : pblockwhitelistSplit) {
+			pblockwhitelist.add(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(pblock.trim())));
+		}
+
+	}
+
 }
 
 

@@ -19,7 +19,6 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 minecraft {
     mappings channel: 'snapshot', version: '20180921-1.13'
-    accessTransformer = file("$rootDir/src/main/resources/META_INF/restrictedportals_at.cfg")
     
     runs {
         client = {
@@ -38,7 +37,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.10'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.13'
 }
 
 jar {

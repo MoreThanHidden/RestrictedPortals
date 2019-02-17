@@ -68,8 +68,6 @@ public class RestrictedPortals {
             );
         }
 
-		LOGGER.info(Arrays.toString(AdvancementHelper.GetCustomAdvancementList(path + "/restrictedportals/data/restrictedportals/advancements")));
-
 		event.getServer().reload();
 
 		//Put the advancements into the array

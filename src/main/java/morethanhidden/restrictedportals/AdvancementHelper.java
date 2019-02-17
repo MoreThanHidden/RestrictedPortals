@@ -132,11 +132,4 @@ public class AdvancementHelper {
 
     }
 
-    public static String[] GetCustomAdvancementList(String path) {
-
-        File file = new File(path);
-
-        return file.list();
-    }
-
 }

@@ -6,3 +6,12 @@ before_install:
  - chmod +x gradlew
 
 script: ./gradlew build -S
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+  file: build/lib/*
+  skip_cleanup: true
+  on:
+    tags: true

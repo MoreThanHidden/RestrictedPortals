@@ -11,14 +11,14 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = "1.14.3-0.9"
+version = "1.14.4-0.9.1"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "restrictedportals"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190630-1.14.3'
+    mappings channel: 'snapshot', version: '20191006-1.14.3'
     
     runs {
         client = {
@@ -37,14 +37,14 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.3-27.0.57'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.39'
 }
 
 jar {
     manifest {
         attributes(["Specification-Title": "restrictedportals",
                     "Specification-Vendor": "morethanhidden",
-                    "Specification-Version": "27.0", // We are version 1 of the modlauncher specification
+                    "Specification-Version": "28.0", // We are version 1 of the modlauncher specification
                     "Implementation-Title": project.name,
                     "Implementation-Version": "${version}",
                     "Implementation-Vendor" :"morethanhidden",

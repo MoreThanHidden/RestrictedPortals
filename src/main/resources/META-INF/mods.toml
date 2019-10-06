@@ -47,6 +47,6 @@ A mod that requires you to craft an item before allowing the player to enter the
 [[dependencies.restrictedportals]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.2,]"
+    versionRange="[1.14.4,]"
     ordering="NONE"
     side="BOTH"

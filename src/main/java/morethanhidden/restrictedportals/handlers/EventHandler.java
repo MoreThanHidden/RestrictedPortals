@@ -4,10 +4,12 @@ import morethanhidden.restrictedportals.RestrictedPortals;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -24,8 +26,8 @@ public class EventHandler {
 
         if(event.getEntity() instanceof ServerPlayerEntity) {
             ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getEntity();
-            for (int i = 0; i < RestrictedPortals.idSplit.length; i++) {
-                if (event.getDimension().getId() == Integer.parseInt(RestrictedPortals.idSplit[i].trim())
+            for (int i = 0; i < RestrictedPortals.nameSplit.length; i++) {
+                if (event.getDimension() == RegistryKey.func_240903_a_(Registry.field_239699_ae_, RestrictedPortals.dimResSplit.get(i))
                         && !playerMP.getAdvancements().getProgress(RestrictedPortals.advancements[i]).isDone()) {
                     //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
                     if(!sentMessage.containsKey(playerMP.getUniqueID())
@@ -37,9 +39,9 @@ public class EventHandler {
                         sentMessage.put(playerMP.getUniqueID(), playerMP.world.getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
-                    if(event.getDimension().getId() == 1 && ConfigHandler.GENERAL.preventEPDeath.get()){
-                        BlockPos coordinates = playerMP.getBedLocation(DimensionType.OVERWORLD);
-                        if (coordinates == null){ coordinates = playerMP.world.getSpawnPoint(); }
+                    if(event.getDimension() == RegistryKey.func_240903_a_(Registry.field_239699_ae_, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
+                        BlockPos coordinates = playerMP.func_241140_K_();
+                        if (coordinates == null){ coordinates = ((ServerWorld)playerMP.world).func_241135_u_(); }
                         playerMP.setPositionAndUpdate(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
                     event.setCanceled(true);

@@ -11,7 +11,7 @@ public class ConfigHandler {
         public final ForgeConfigSpec.ConfigValue<String> blockedmessage;
         public final ForgeConfigSpec.ConfigValue<String> craftedmessage;
         public final ForgeConfigSpec.ConfigValue<String> craftItems;
-        public final ForgeConfigSpec.ConfigValue<String> dimIDs;
+        public final ForgeConfigSpec.ConfigValue<String> dimResName;
         public final ForgeConfigSpec.ConfigValue<String> dimNames;
 
         General(ForgeConfigSpec.Builder builder) {
@@ -32,12 +32,12 @@ public class ConfigHandler {
                     .comment("Comma seperated list of items that when crafted unlock the corresponding dimension")
                     .translation("restrictedportals.configgui.craftitems")
                     .define("craftitems", "minecraft:flint_and_steel,minecraft:ender_eye");
-            dimIDs = builder
-                    .comment("Comma seperated list of Dimension IDs to be blocked by items")
-                    .translation("restrictedportals.configgui.dimids")
-                    .define("dimids", "-1,1");
+            dimResName = builder
+                    .comment("Comma seperated list of Dimension Resource Names")
+                    .translation("restrictedportals.configgui.dimresname")
+                    .define("dimresname", "minecraft:the_nether,minecraft:the_end");
             dimNames = builder
-                    .comment("Comma seperated list of Dimension Names to match IDs")
+                    .comment("Comma seperated list of Dimension Display Names")
                     .translation("restrictedportals.configgui.dimnames")
                     .define("dimnames", "Nether,End");
             builder.pop();

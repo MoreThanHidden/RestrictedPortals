@@ -27,7 +27,7 @@ public class EventHandler {
         if(event.getEntity() instanceof ServerPlayerEntity) {
             ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getEntity();
             for (int i = 0; i < RestrictedPortals.nameSplit.length; i++) {
-                if (event.getDimension() == RegistryKey.func_240903_a_(Registry.field_239699_ae_, RestrictedPortals.dimResSplit.get(i))
+                if (event.getDimension() == RegistryKey.getRegistryKey(Registry.DIMENSION, RestrictedPortals.dimResSplit.get(i))
                         && !playerMP.getAdvancements().getProgress(RestrictedPortals.advancements[i]).isDone()) {
                     //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
                     if(!sentMessage.containsKey(playerMP.getUniqueID())
@@ -39,9 +39,9 @@ public class EventHandler {
                         sentMessage.put(playerMP.getUniqueID(), playerMP.world.getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
-                    if(event.getDimension() == RegistryKey.func_240903_a_(Registry.field_239699_ae_, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
-                        BlockPos coordinates = playerMP.func_241140_K_();
-                        if (coordinates == null){ coordinates = ((ServerWorld)playerMP.world).func_241135_u_(); }
+                    if(event.getDimension() == RegistryKey.getRegistryKey(Registry.DIMENSION, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
+                        BlockPos coordinates = playerMP.getSpawnPos();
+                        if (coordinates == null){ coordinates = ((ServerWorld)playerMP.world).getSpawnPos(); }
                         playerMP.setPositionAndUpdate(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
                     event.setCanceled(true);

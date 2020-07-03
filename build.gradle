@@ -10,15 +10,23 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 
-version = "1.16.1-1.1.1"
+version = "1.16.1-1.1.2"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "restrictedportals"
+
+repositories {
+    maven {
+        name "ModMaven"
+        url "https://modmaven.k-4u.nl"
+    }
+}
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.16'
+    mappings channel: 'snapshot', version: '20200703-hidden-1.16.1'
 
     runs {
         client {
@@ -43,22 +51,11 @@ minecraft {
             }
         }
 
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'restrictedportals', '--all', '--output', file('src/generated/resources/')
-            mods {
-                restrictedportals {
-                    source sourceSets.main
-                }
-            }
-        }
     }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.23'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.47'
 }
 
 jar {

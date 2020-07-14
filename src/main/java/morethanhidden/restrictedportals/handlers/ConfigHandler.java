@@ -10,6 +10,7 @@ public class ConfigHandler {
         public final ForgeConfigSpec.BooleanValue preventEPDeath;
         public final ForgeConfigSpec.ConfigValue<String> blockedmessage;
         public final ForgeConfigSpec.ConfigValue<String> craftedmessage;
+        public final ForgeConfigSpec.ConfigValue<String> description;
         public final ForgeConfigSpec.ConfigValue<String> craftItems;
         public final ForgeConfigSpec.ConfigValue<String> dimResName;
         public final ForgeConfigSpec.ConfigValue<String> dimNames;
@@ -28,6 +29,10 @@ public class ConfigHandler {
                     .comment("Title for the Advancements")
                     .translation("restrictedportals.configgui.craftedmessage")
                     .define("craftedmessage", "%dim% Unlocked!");
+            description = builder
+                    .comment("Description for the Advancements")
+                    .translation("restrictedportals.configgui.description")
+                    .define("description", "Obtain a %item%");
             craftItems = builder
                     .comment("Comma seperated list of items that when crafted unlock the corresponding dimension")
                     .translation("restrictedportals.configgui.craftitems")

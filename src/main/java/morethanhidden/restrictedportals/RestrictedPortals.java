@@ -3,6 +3,7 @@ package morethanhidden.restrictedportals;
 import morethanhidden.restrictedportals.handlers.ConfigHandler;
 import morethanhidden.restrictedportals.handlers.EventHandler;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.resources.ResourcePackList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.FolderName;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,7 +66,7 @@ public class RestrictedPortals {
         for (int i = 0; i < nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     ConfigHandler.GENERAL.craftedmessage.get().replace("%dim%", nameSplit[i]),
-                    "Unlock the %dim%".replace("%dim%", nameSplit[i]),
+                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", I18n.format(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getTranslationKey())),
                     itemSplit[i],
                     nameSplit[i].toLowerCase().replace(" ",""),
                     path

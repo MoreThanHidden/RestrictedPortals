@@ -73,7 +73,7 @@ public class RestrictedPortals {
             );
         }
 
-        ResourcePackList<?> resourcepacklist = event.getServer().getResourcePacks();
+        ResourcePackList resourcepacklist = event.getServer().getResourcePacks();
         resourcepacklist.reloadPacksFromFinders();
         event.getServer().reloadPacks(resourcepacklist.getAllPackNames());
 

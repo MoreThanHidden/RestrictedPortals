@@ -3,9 +3,9 @@ package morethanhidden.restrictedportals;
 import morethanhidden.restrictedportals.handlers.ConfigHandler;
 import morethanhidden.restrictedportals.handlers.EventHandler;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.resources.ResourcePackList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.storage.FolderName;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -66,7 +66,7 @@ public class RestrictedPortals {
         for (int i = 0; i < nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     ConfigHandler.GENERAL.craftedmessage.get().replace("%dim%", nameSplit[i]),
-                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", I18n.format(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getTranslationKey())),
+                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", new TranslationTextComponent(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getTranslationKey()).getString()),
                     itemSplit[i],
                     nameSplit[i].toLowerCase().replace(" ",""),
                     path

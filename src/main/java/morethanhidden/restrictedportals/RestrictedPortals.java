@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Mod(modid="restrictedportals", name="Restricted Portals", version="1.12-0.6.3")
+@Mod(modid="restrictedportals", name="Restricted Portals", version="1.12-0.6.3" acceptableRemoteVersions="*")
 public class RestrictedPortals {
 
 	@Mod.Instance(value = "restrictedportals")

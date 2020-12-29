@@ -73,12 +73,10 @@ public class RestrictedPortals {
             );
         }
 
-        //Resolve Data Packs
+        //Reload Data Packs
         ResourcePackList resourcepacklist = event.getServer().getResourcePacks();
         resourcepacklist.reloadPacksFromFinders();
-
-        //Reload generated Data Pack
-        event.getServer().func_240780_a_(resourcepacklist.func_232616_b_().stream().filter(s -> s.contains("restrictedportals")).collect(Collectors.toList()));
+        event.getServer().func_240780_a_(resourcepacklist.func_232616_b_());
 
         //Put the advancements into the array
         for (int i = 0; i < nameSplit.length; i++) {

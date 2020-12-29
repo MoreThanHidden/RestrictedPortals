@@ -37,7 +37,7 @@ public class RestrictedPortals {
 
 	public RestrictedPortals() {
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.spec);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.spec);
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 
 		//Register Event Handler

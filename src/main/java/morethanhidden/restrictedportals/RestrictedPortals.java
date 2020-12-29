@@ -51,7 +51,7 @@ public class RestrictedPortals {
 
 	@SubscribeEvent()
 	public void onServerStarting(FMLServerAboutToStartEvent event){
-	    String path = event.getServer().getPath(FolderName.DATAPACKS).toString();
+	    String path = event.getServer().func_240776_a_(FolderName.DATAPACKS).toString();
 
 		AdvancementHelper.CreateDatapack(path);
         AdvancementHelper.ClearCustomAdvancements(path);
@@ -73,9 +73,12 @@ public class RestrictedPortals {
             );
         }
 
+        //Resolve Data Packs
         ResourcePackList resourcepacklist = event.getServer().getResourcePacks();
         resourcepacklist.reloadPacksFromFinders();
-        event.getServer().reloadPacks(resourcepacklist.getAllPackNames());
+
+        //Reload generated Data Pack
+        event.getServer().func_240780_a_(resourcepacklist.func_232616_b_().stream().filter(s -> s.contains("restrictedportals")).collect(Collectors.toList()));
 
         //Put the advancements into the array
         for (int i = 0; i < nameSplit.length; i++) {

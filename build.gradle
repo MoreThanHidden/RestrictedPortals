@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
-version = "1.16.4-1.1.6"
+version = "1.16.4-1.1.7"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "restrictedportals"
 
@@ -48,7 +48,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.28'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.37'
 }
 
 jar {

@@ -1,8 +1,10 @@
 package morethanhidden.restrictedportals;
 
+import com.google.common.collect.Lists;
 import morethanhidden.restrictedportals.handlers.ConfigHandler;
 import morethanhidden.restrictedportals.handlers.EventHandler;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -73,10 +75,26 @@ public class RestrictedPortals {
             );
         }
 
-        //Reload Data Packs
+        //Get Datapacks
         ResourcePackList resourcepacklist = event.getServer().getResourcePacks();
         resourcepacklist.reloadPacksFromFinders();
-        event.getServer().func_240780_a_(resourcepacklist.func_232616_b_()).exceptionally(ex -> null);
+        List<ResourcePackInfo> list = Lists.newArrayList(resourcepacklist.getEnabledPacks());
+
+        //Enable the Restricted Portals Dynamic Datapack
+        ResourcePackInfo restrictedPortalsDatapack = resourcepacklist.getPackInfo("file/restrictedportals");
+        if(!list.contains(restrictedPortalsDatapack)) {
+            list.add(2, restrictedPortalsDatapack);
+        }
+
+        //Fix Forge / Vanilla Order (Issue #34)
+        ResourcePackInfo vanillaDatapack = resourcepacklist.getPackInfo("vanilla");
+        if(list.get(0) != vanillaDatapack) {
+            list.remove(vanillaDatapack);
+            list.add(0, vanillaDatapack);
+        }
+
+        //Reload Datapacks
+        event.getServer().func_240780_a_(list.stream().map(ResourcePackInfo::getName).collect(Collectors.toList())).exceptionally(ex -> null);
 
         //Put the advancements into the array
         for (int i = 0; i < nameSplit.length; i++) {

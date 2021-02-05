@@ -82,8 +82,8 @@ public class AdvancementHelper {
 
         //Pack MCMeta(Json)
         JsonObject pack = new JsonObject();
-        pack.add("description",  new JsonPrimitive("restrictedportals resources"));
-        pack.add("pack_format",  new JsonPrimitive(4));
+        pack.add("description",  new JsonPrimitive("restrictedportals datapack"));
+        pack.add("pack_format",  new JsonPrimitive(6));
 
         JsonObject mcmeta = new JsonObject();
         mcmeta.add("pack", pack);

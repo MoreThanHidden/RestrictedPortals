@@ -27,22 +27,22 @@ public class EventHandler {
         if(event.getEntity() instanceof ServerPlayerEntity) {
             ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getEntity();
             for (int i = 0; i < RestrictedPortals.nameSplit.length; i++) {
-                if (event.getDimension() == RegistryKey.getOrCreateKey(Registry.WORLD_KEY, RestrictedPortals.dimResSplit.get(i))
-                        && !playerMP.getAdvancements().getProgress(RestrictedPortals.advancements[i]).isDone()) {
+                if (event.getDimension() == RegistryKey.create(Registry.DIMENSION_REGISTRY, RestrictedPortals.dimResSplit.get(i))
+                        && !playerMP.getAdvancements().getOrStartProgress(RestrictedPortals.advancements[i]).isDone()) {
                     //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
-                    if(!sentMessage.containsKey(playerMP.getUniqueID())
-                            || (playerMP.world.getGameTime() - sentMessage.get(playerMP.getUniqueID())) > 40
-                            || (playerMP.world.getGameTime() - sentMessage.get(playerMP.getUniqueID())) < 0) {
+                    if(!sentMessage.containsKey(playerMP.getUUID())
+                            || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
+                            || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
                         String item = new ItemStack(GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation(RestrictedPortals.itemSplit[i]))).getDisplayName().getString();
-                        if(!playerMP.world.isRemote)
-                            playerMP.sendStatusMessage(new TranslationTextComponent(ConfigHandler.GENERAL.blockedmessage.get().replace("%item%", item).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
-                        sentMessage.put(playerMP.getUniqueID(), playerMP.world.getGameTime());
+                        if(!playerMP.level.isClientSide)
+                            playerMP.displayClientMessage(new TranslationTextComponent(ConfigHandler.GENERAL.blockedmessage.get().replace("%item%", item).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
+                        sentMessage.put(playerMP.getUUID(), playerMP.level.getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
-                    if(event.getDimension() == RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
-                        BlockPos coordinates = playerMP.func_241140_K_();
-                        if (coordinates == null){ coordinates = ((ServerWorld)playerMP.world).getSpawnPoint(); }
-                        playerMP.setPositionAndUpdate(coordinates.getX(), coordinates.getY(), coordinates.getZ());
+                    if(event.getDimension() == RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
+                        BlockPos coordinates = playerMP.getRespawnPosition();
+                        if (coordinates == null){ coordinates = ((ServerWorld)playerMP.level).getSharedSpawnPos(); }
+                        playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
                     event.setCanceled(true);
                 }

@@ -53,7 +53,7 @@ public class RestrictedPortals {
 
 	@SubscribeEvent()
 	public void onServerStarting(FMLServerAboutToStartEvent event){
-	    String path = event.getServer().func_240776_a_(FolderName.DATAPACKS).toString();
+	    String path = event.getServer().getWorldPath(FolderName.DATAPACK_DIR).toString();
 
 		AdvancementHelper.CreateDatapack(path);
         AdvancementHelper.ClearCustomAdvancements(path);
@@ -68,7 +68,7 @@ public class RestrictedPortals {
         for (int i = 0; i < nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     ConfigHandler.GENERAL.craftedmessage.get().replace("%dim%", nameSplit[i]),
-                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", new TranslationTextComponent(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getTranslationKey()).getString()),
+                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", new TranslationTextComponent(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getDescriptionId()).getString()),
                     itemSplit[i],
                     nameSplit[i].toLowerCase().replace(" ",""),
                     path
@@ -76,29 +76,29 @@ public class RestrictedPortals {
         }
 
         //Get Datapacks
-        ResourcePackList resourcepacklist = event.getServer().getResourcePacks();
-        resourcepacklist.reloadPacksFromFinders();
-        List<ResourcePackInfo> list = Lists.newArrayList(resourcepacklist.getEnabledPacks());
+        ResourcePackList resourcepacklist = event.getServer().getPackRepository();
+        resourcepacklist.reload();
+        List<ResourcePackInfo> list = Lists.newArrayList(resourcepacklist.getSelectedPacks());
 
         //Enable the Restricted Portals Dynamic Datapack
-        ResourcePackInfo restrictedPortalsDatapack = resourcepacklist.getPackInfo("file/restrictedportals");
+        ResourcePackInfo restrictedPortalsDatapack = resourcepacklist.getPack("file/restrictedportals");
         if(!list.contains(restrictedPortalsDatapack)) {
             list.add(2, restrictedPortalsDatapack);
         }
 
         //Fix Forge / Vanilla Order (Issue #34)
-        ResourcePackInfo vanillaDatapack = resourcepacklist.getPackInfo("vanilla");
+        ResourcePackInfo vanillaDatapack = resourcepacklist.getPack("vanilla");
         if(list.get(0) != vanillaDatapack) {
             list.remove(vanillaDatapack);
             list.add(0, vanillaDatapack);
         }
 
         //Reload Datapacks
-        event.getServer().func_240780_a_(list.stream().map(ResourcePackInfo::getName).collect(Collectors.toList())).exceptionally(ex -> null);
+        event.getServer().reloadResources(list.stream().map(ResourcePackInfo::getId).collect(Collectors.toList())).exceptionally(ex -> null);
 
         //Put the advancements into the array
         for (int i = 0; i < nameSplit.length; i++) {
-            advancements[i] = event.getServer().getAdvancementManager().getAdvancement(new ResourceLocation("restrictedportals:" + RestrictedPortals.nameSplit[i].toLowerCase().replace(" ", "")));
+            advancements[i] = event.getServer().getAdvancements().getAdvancement(new ResourceLocation("restrictedportals:" + RestrictedPortals.nameSplit[i].toLowerCase().replace(" ", "")));
         }
 
     }

@@ -2,25 +2,23 @@ buildscript {
     repositories {
         maven { url = 'https://sizableshrimp.me/maven' }
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'me.sizableshrimp.parchmenttest', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'me.sizableshrimp.parchmenttest', name: 'ForgeGradle', version: '5.1.20', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
-apply plugin: 'maven'
 
-version = "1.16.5-1.1.8"
+version = "1.17.1-1.1.9"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "restrictedportals"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
-    mappings channel: 'parchment', version: '20210608-SNAPSHOT-1.16.5'
+    mappings channel: 'parchment', version: '2021.07.21-1.17'
 
     runs {
         client {
@@ -49,7 +47,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.32'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.7'
 }
 
 jar {

@@ -13,11 +13,16 @@ public class AdvancementHelper {
     public static void AddCustomAdvancement(String title, String description, String item, String shortname, String path) {
 
         //Advancement Json
+        JsonObject iconItem = new JsonObject();
+        iconItem.add("item", new JsonPrimitive(item));
+
         JsonObject jitem = new JsonObject();
-        jitem.add("item", new JsonPrimitive(item));
+        JsonArray jitems = new JsonArray();
+        jitems.add(item);
+        jitem.add("items", jitems);
 
         JsonObject display = new JsonObject();
-        display.add("icon", jitem);
+        display.add("icon", iconItem);
         display.add("title",  new JsonPrimitive(title));
         display.add("description",  new JsonPrimitive(description));
 
@@ -34,10 +39,16 @@ public class AdvancementHelper {
         JsonObject criteria = new JsonObject();
         criteria.add(shortname, crit1);
 
+        JsonArray requirements = new JsonArray();
+        JsonArray requirementArray = new JsonArray();
+        requirementArray.add(shortname);
+        requirements.add(requirementArray);
+
         JsonObject jo = new JsonObject();
         jo.add("display", display);
         jo.add("parent", new JsonPrimitive("restrictedportals:root"));
         jo.add("criteria", criteria);
+        jo.add("requirements", requirements);
 
         //Create Json Advancement File
         File file = new File(path + "/restrictedportals/data/restrictedportals/advancements/" + shortname + ".json");

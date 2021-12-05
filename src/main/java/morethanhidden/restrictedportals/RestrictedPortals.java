@@ -10,15 +10,14 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fmllegacy.network.FMLNetworkConstants;
-import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
+import net.minecraftforge.network.NetworkConstants;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +39,7 @@ public class RestrictedPortals {
 	public RestrictedPortals() {
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.spec);
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
 
 		//Register Event Handler
 		EventHandler eventHandler = new EventHandler();
@@ -52,7 +51,7 @@ public class RestrictedPortals {
 	}
 
 	@SubscribeEvent()
-	public void onServerStarting(FMLServerAboutToStartEvent event){
+	public void onServerStarting(ServerAboutToStartEvent event){
 	    String path = event.getServer().getWorldPath(LevelResource.DATAPACK_DIR).toString();
 
 		AdvancementHelper.CreateDatapack(path);

@@ -8,11 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -33,7 +32,7 @@ public class EventHandler {
                     if(!sentMessage.containsKey(playerMP.getUUID())
                             || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
                             || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
-                        String item = new ItemStack(GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation(RestrictedPortals.itemSplit[i]))).getDisplayName().getString();
+                        String item = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(RestrictedPortals.itemSplit[i]))).getDisplayName().getString();
                         if(!playerMP.level.isClientSide)
                             playerMP.displayClientMessage(new TranslatableComponent(ConfigHandler.GENERAL.blockedmessage.get().replace("%item%", item).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
                         sentMessage.put(playerMP.getUUID(), playerMP.level.getGameTime());

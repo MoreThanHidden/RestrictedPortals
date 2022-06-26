@@ -3,7 +3,7 @@ package morethanhidden.restrictedportals.handlers;
 import morethanhidden.restrictedportals.RestrictedPortals;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +34,7 @@ public class EventHandler {
                             || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
                         String item = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(RestrictedPortals.itemSplit[i]))).getDisplayName().getString();
                         if(!playerMP.level.isClientSide)
-                            playerMP.displayClientMessage(new TranslatableComponent(ConfigHandler.GENERAL.blockedmessage.get().replace("%item%", item).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
+                            playerMP.displayClientMessage(Component.translatable(ConfigHandler.GENERAL.blockedmessage.get().replace("%item%", item).replace("%dim%", RestrictedPortals.nameSplit[i])), false);
                         sentMessage.put(playerMP.getUUID(), playerMP.level.getGameTime());
                     }
                     //Prevent Death by Lava for End Portal

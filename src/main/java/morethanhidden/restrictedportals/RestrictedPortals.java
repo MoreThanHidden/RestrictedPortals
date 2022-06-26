@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import morethanhidden.restrictedportals.handlers.ConfigHandler;
 import morethanhidden.restrictedportals.handlers.EventHandler;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
@@ -67,7 +67,7 @@ public class RestrictedPortals {
         for (int i = 0; i < nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     ConfigHandler.GENERAL.craftedmessage.get().replace("%dim%", nameSplit[i]),
-                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", new TranslatableComponent(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getDescriptionId()).getString()),
+                    ConfigHandler.GENERAL.description.get().replace("%dim%", nameSplit[i]).replace("%item%", Component.translatable(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemSplit[i])).getDescriptionId()).getString()),
                     itemSplit[i],
                     nameSplit[i].toLowerCase().replace(" ",""),
                     path

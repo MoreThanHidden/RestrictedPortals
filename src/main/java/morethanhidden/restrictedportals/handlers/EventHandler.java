@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +22,7 @@ public class EventHandler {
     @SubscribeEvent
     public void onPlayerChangeDim(EntityTravelToDimensionEvent event){
 
-        if(event.getEntity() instanceof ServerPlayer) {
-            ServerPlayer playerMP = (ServerPlayer) event.getEntity();
+        if(event.getEntity() instanceof ServerPlayer playerMP) {
             for (int i = 0; i < RestrictedPortals.nameSplit.length; i++) {
                 if (event.getDimension() == ResourceKey.create(Registry.DIMENSION_REGISTRY, RestrictedPortals.dimResSplit.get(i))
                         && !playerMP.getAdvancements().getOrStartProgress(RestrictedPortals.advancements[i]).isDone()) {
@@ -40,7 +38,7 @@ public class EventHandler {
                     //Prevent Death by Lava for End Portal
                     if(event.getDimension() == ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
                         BlockPos coordinates = playerMP.getRespawnPosition();
-                        if (coordinates == null){ coordinates = ((ServerLevel)playerMP.level).getSharedSpawnPos(); }
+                        if (coordinates == null){ coordinates = playerMP.level.getSharedSpawnPos(); }
                         playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
                     event.setCanceled(true);

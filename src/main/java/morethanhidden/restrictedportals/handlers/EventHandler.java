@@ -2,7 +2,7 @@ package morethanhidden.restrictedportals.handlers;
 
 import morethanhidden.restrictedportals.RestrictedPortals;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +24,7 @@ public class EventHandler {
 
         if(event.getEntity() instanceof ServerPlayer playerMP) {
             for (int i = 0; i < RestrictedPortals.nameSplit.length; i++) {
-                if (event.getDimension() == ResourceKey.create(Registry.DIMENSION_REGISTRY, RestrictedPortals.dimResSplit.get(i))
+                if (event.getDimension() == ResourceKey.create(Registries.DIMENSION, RestrictedPortals.dimResSplit.get(i))
                         && !playerMP.getAdvancements().getOrStartProgress(RestrictedPortals.advancements[i]).isDone()) {
                     //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
                     if(!sentMessage.containsKey(playerMP.getUUID())
@@ -36,7 +36,7 @@ public class EventHandler {
                         sentMessage.put(playerMP.getUUID(), playerMP.level.getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
-                    if(event.getDimension() == ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
+                    if(event.getDimension() == ResourceKey.create(Registries.DIMENSION, new ResourceLocation("the_end")) && ConfigHandler.GENERAL.preventEPDeath.get()){
                         BlockPos coordinates = playerMP.getRespawnPosition();
                         if (coordinates == null){ coordinates = playerMP.level.getSharedSpawnPos(); }
                         playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());

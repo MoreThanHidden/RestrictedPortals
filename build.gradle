@@ -13,14 +13,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 
-version = "1.19.2-1.3.1"
+version = "1.19.3-1.3.2"
 group = "morethanhidden.restrictedportals"
 archivesBaseName = "restrictedportals"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: '2022.09.04-1.19.2'
+    mappings channel: 'parchment', version: '1.19.2-2022.09.04-1.19.3'
 
     runs {
         client {
@@ -49,7 +49,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.47'
+    minecraft 'net.minecraftforge:forge:1.19.3-44.0.6'
 }
 
 jar {

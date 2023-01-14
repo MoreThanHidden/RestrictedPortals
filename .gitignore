@@ -1,13 +1,23 @@
-/*
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
 
-# folders
-!/docs
-!/gradle
-!/src
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea/*
+!.idea/scopes
 
-# files
-!/.gitignore
-!/README.md
-!/build.gradle
-!/gradlew
-!/gradlew.bat
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run

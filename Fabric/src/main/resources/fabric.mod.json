@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "restrictedportals",
+  "version": "${version}",
+
+  "name": "Restricted Portals",
+  "description": "A mod that requires you to craft an item before allowing the player to enter the nether or end, this is to stop people on multiplayer servers bypassing early game.",
+  "authors": [
+    "MoreThanHidden"
+  ],
+  "contact": {
+    "sources": "https://github.com/MoreThanHidden/RestrictedPortals",
+    "issues": "https://github.com/MoreThanHidden/RestrictedPortals/issues"
+  },
+
+  "license": "LGPLV3 license",
+  "icon": "logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "morethanhidden.restrictedportals.RestrictedPortals"
+    ]
+  },
+  "mixins": [
+    "restrictedportals.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12",
+    "fabric": ">=0.68",
+    "minecraft": ">=1.19.2"
+  }
+}

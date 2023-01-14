@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "morethanhidden.restrictedportals.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MinecraftServerMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "restrictedportals.refmap.json"
+}

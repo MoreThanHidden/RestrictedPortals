@@ -54,12 +54,12 @@ public class AdvancementHelper {
         File file = new File(path + "/restrictedportals/data/restrictedportals/advancements/" + shortname + ".json");
         try {
             if(file.createNewFile()){
-                RestrictedPortals.LOGGER.info("Created Json File: " + file.getPath());
+                Constants.LOGGER.info("Created Json File: " + file.getPath());
             }else{
-                RestrictedPortals.LOGGER.info("File already Exists: " + file.getPath());
+                Constants.LOGGER.info("File already Exists: " + file.getPath());
             }
         } catch (IOException e) {
-            RestrictedPortals.LOGGER.info("Creating file failed: " + file.getPath());
+            Constants.LOGGER.info("Creating file failed: " + file.getPath());
         }
 
         try {
@@ -68,7 +68,7 @@ public class AdvancementHelper {
             fileWriter.close();
 
         } catch (IOException e) {
-            RestrictedPortals.LOGGER.info("Editing File Failed: " + file.getPath());
+            Constants.LOGGER.info("Editing File Failed: " + file.getPath());
         }
 
     }
@@ -77,18 +77,22 @@ public class AdvancementHelper {
         try {
             FileUtils.cleanDirectory(new File(path + "/restrictedportals/data/restrictedportals/advancements"));
         } catch (Exception e) {
-            RestrictedPortals.LOGGER.info("Failed to clean Advancements Folder");
+            Constants.LOGGER.info("Failed to clean Advancements Folder");
         }
     }
 
     public static void CreateDatapack(String path){
 
         //Make DataPack Folders
+        File datapackFolder = new File(path);
+        if(datapackFolder.mkdir()){
+            Constants.LOGGER.info("Created DataPack Folder: " + datapackFolder.getPath());
+        }
         File folder = new File(path + "/restrictedportals");
         if(folder.mkdir()){
-            RestrictedPortals.LOGGER.info("Created DataPack Folder: " + folder.getPath());
+            Constants.LOGGER.info("Created DataPack Folder: " + folder.getPath());
         }else{
-            RestrictedPortals.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
+            Constants.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
         }
 
         //Pack MCMeta(Json)
@@ -102,12 +106,12 @@ public class AdvancementHelper {
         File file = new File(path + "/restrictedportals/pack.mcmeta");
         try {
             if(file.createNewFile()){
-                RestrictedPortals.LOGGER.info("Created Data Pack mcmeta: " + file.getPath());
+                Constants.LOGGER.info("Created Data Pack mcmeta: " + file.getPath());
             }else{
-                RestrictedPortals.LOGGER.info("File already Exists: " + file.getPath());
+                Constants.LOGGER.info("File already Exists: " + file.getPath());
             }
         } catch (IOException e) {
-            RestrictedPortals.LOGGER.info("Creating file failed: " + file.getPath());
+            Constants.LOGGER.info("Creating file failed: " + file.getPath());
         }
 
         try {
@@ -116,29 +120,29 @@ public class AdvancementHelper {
             fileWriter.close();
 
         } catch (IOException e) {
-            RestrictedPortals.LOGGER.info("Editing File Failed: " + file.getPath());
+            Constants.LOGGER.info("Editing File Failed: " + file.getPath());
         }
 
 
         folder = new File(path + "/restrictedportals/data");
         if(folder.mkdir()){
-            RestrictedPortals.LOGGER.info("Created DataPack Folder: " + folder.getPath());
+            Constants.LOGGER.info("Created DataPack Folder: " + folder.getPath());
         }else{
-            RestrictedPortals.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
+            Constants.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
         }
 
         folder = new File(path + "/restrictedportals/data/restrictedportals");
         if(folder.mkdir()){
-            RestrictedPortals.LOGGER.info("Created DataPack Folder: " + folder.getPath());
+            Constants.LOGGER.info("Created DataPack Folder: " + folder.getPath());
         }else{
-            RestrictedPortals.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
+            Constants.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
         }
 
         folder = new File(path + "/restrictedportals/data/restrictedportals/advancements");
         if(folder.mkdir()){
-            RestrictedPortals.LOGGER.info("Created DataPack Folder: " + folder.getPath());
+            Constants.LOGGER.info("Created DataPack Folder: " + folder.getPath());
         }else{
-            RestrictedPortals.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
+            Constants.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
         }
 
     }

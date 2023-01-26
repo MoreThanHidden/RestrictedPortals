@@ -16,7 +16,9 @@ import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelResource;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +38,29 @@ public class RPCommon {
      * @param server the Minecraft server instance
      */
 	public static void onServerStarting(MinecraftServer server){
+        //Get the path to the datapack folder
+        String path = server.getWorldPath(LevelResource.DATAPACK_DIR).toString();
+
+        AdvancementHelper.CreateDatapack(path);
+        AdvancementHelper.ClearCustomAdvancements(path);
+
+        //Get Config Values
+        RPCommon.nameSplit = Services.PLATFORM.getConfigDimensionsNames().split(",");
+        RPCommon.dimResSplit = Arrays.stream(Services.PLATFORM.getConfigDimensionsResourceNames().split(",")).map(String::toLowerCase).map(ResourceLocation::new).collect(Collectors.toList());
+        RPCommon.itemSplit = Services.PLATFORM.getConfigCraftItems().split(",");
+
+        RPCommon.advancements = new Advancement[RPCommon.nameSplit.length];
+
+        //Get Advancements from Config
+        for (int i = 0; i < RPCommon.nameSplit.length; i++) {
+            AdvancementHelper.AddCustomAdvancement(
+                    Services.PLATFORM.getConfigCraftedMessage().replace("%dim%", RPCommon.nameSplit[i]),
+                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(BuiltInRegistries.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i])).getDescriptionId()).getString()),
+                    RPCommon.itemSplit[i],
+                    RPCommon.nameSplit[i].toLowerCase().replace(" ",""),
+                    path
+            );
+        }
 
         //Get Datapacks
         PackRepository resourcepacklist = server.getPackRepository();

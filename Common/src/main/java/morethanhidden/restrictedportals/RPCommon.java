@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import morethanhidden.restrictedportals.platform.services.Services;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +54,7 @@ public class RPCommon {
         for (int i = 0; i < RPCommon.nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     Services.PLATFORM.getConfigCraftedMessage().replace("%dim%", RPCommon.nameSplit[i]),
-                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(BuiltInRegistries.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i])).getDescriptionId()).getString()),
+                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(Registry.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i])).getDescriptionId()).getString()),
                     RPCommon.itemSplit[i],
                     RPCommon.nameSplit[i].toLowerCase().replace(" ",""),
                     path
@@ -91,19 +90,19 @@ public class RPCommon {
     public static boolean blockPlayerFromTransit(Entity player, ResourceKey<Level> dimension){
         if(player instanceof ServerPlayer playerMP) {
             for (int i = 0; i < RPCommon.nameSplit.length; i++) {
-                if (dimension == ResourceKey.create(Registries.DIMENSION, RPCommon.dimResSplit.get(i))
+                if (dimension == ResourceKey.create(Registry.DIMENSION_REGISTRY, RPCommon.dimResSplit.get(i))
                         && !playerMP.getAdvancements().getOrStartProgress(RPCommon.advancements[i]).isDone()) {
                     //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
                     if(!sentMessage.containsKey(playerMP.getUUID())
                             || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
                             || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
-                        String item = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i]))).getDisplayName().getString();
+                        String item = new ItemStack(Registry.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i]))).getDisplayName().getString();
                         if(!playerMP.level.isClientSide)
                             playerMP.displayClientMessage(Component.translatable(Services.PLATFORM.getConfigBlockedMessage().replace("%item%", item).replace("%dim%", RPCommon.nameSplit[i])), false);
                         sentMessage.put(playerMP.getUUID(), playerMP.level.getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
-                    if(dimension == ResourceKey.create(Registries.DIMENSION, new ResourceLocation("the_end")) && Services.PLATFORM.getConfigPreventEPDeath()){
+                    if(dimension == ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("the_end")) && Services.PLATFORM.getConfigPreventEPDeath()){
                         BlockPos coordinates = playerMP.getRespawnPosition();
                         if (coordinates == null){ coordinates = playerMP.level.getSharedSpawnPos(); }
                         playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());

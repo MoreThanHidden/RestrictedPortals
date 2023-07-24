@@ -1,27 +1,33 @@
 plugins {
-    id 'org.quiltmc.loom' version '0.12.+'
+    id 'idea'
+    id 'java'
+    id 'maven-publish'
+    id 'org.spongepowered.gradle.vanilla'
 }
 
-archivesBaseName = "${mod_name}-common-${minecraft_version}"
+base {
+    archivesName = "${mod_name}-common-${minecraft_version}"
+}
+
+minecraft {
+    version(minecraft_version)
+}
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
     compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 }
 
-loom {
-    shareCaches()
-    remapArchives = false
-    mixin {
-        useLegacyMixinAp = false
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId base.archivesName.get()
+            from components.java
+        }
     }
-}
-
-processResources {
-    def buildProps = project.properties.clone()
-
-    filesMatching(['pack.mcmeta']) {
-        expand buildProps
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
     }
 }

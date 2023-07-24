@@ -95,17 +95,17 @@ public class RPCommon {
                         && !playerMP.getAdvancements().getOrStartProgress(RPCommon.advancements[i]).isDone()) {
                     //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
                     if(!sentMessage.containsKey(playerMP.getUUID())
-                            || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
-                            || (playerMP.level.getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
+                            || (playerMP.level().getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
+                            || (playerMP.level().getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
                         String item = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i]))).getDisplayName().getString();
-                        if(!playerMP.level.isClientSide)
+                        if(!playerMP.level().isClientSide)
                             playerMP.displayClientMessage(Component.translatable(Services.PLATFORM.getConfigBlockedMessage().replace("%item%", item).replace("%dim%", RPCommon.nameSplit[i])), false);
-                        sentMessage.put(playerMP.getUUID(), playerMP.level.getGameTime());
+                        sentMessage.put(playerMP.getUUID(), playerMP.level().getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
                     if(dimension == ResourceKey.create(Registries.DIMENSION, new ResourceLocation("the_end")) && Services.PLATFORM.getConfigPreventEPDeath()){
                         BlockPos coordinates = playerMP.getRespawnPosition();
-                        if (coordinates == null){ coordinates = playerMP.level.getSharedSpawnPos(); }
+                        if (coordinates == null){ coordinates = playerMP.level().getSharedSpawnPos(); }
                         playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
                     return true;

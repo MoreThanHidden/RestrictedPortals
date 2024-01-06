@@ -2,7 +2,7 @@ package morethanhidden.restrictedportals;
 
 import com.google.common.collect.Lists;
 import morethanhidden.restrictedportals.platform.services.Services;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -29,7 +29,7 @@ public class RPCommon {
 	public static String[] nameSplit;
     public static List<ResourceLocation> dimResSplit;
     public static String[] itemSplit;
-    public static Advancement[] advancements;
+    public static AdvancementHolder[] advancements;
 
     private static HashMap<UUID, Long> sentMessage = new HashMap<>();
 
@@ -49,7 +49,7 @@ public class RPCommon {
         RPCommon.dimResSplit = Arrays.stream(Services.PLATFORM.getConfigDimensionsResourceNames().split(",")).map(String::toLowerCase).map(ResourceLocation::new).collect(Collectors.toList());
         RPCommon.itemSplit = Services.PLATFORM.getConfigCraftItems().split(",");
 
-        RPCommon.advancements = new Advancement[RPCommon.nameSplit.length];
+        RPCommon.advancements = new AdvancementHolder[RPCommon.nameSplit.length];
 
         //Get Advancements from Config
         for (int i = 0; i < RPCommon.nameSplit.length; i++) {
@@ -78,7 +78,7 @@ public class RPCommon {
 
 	    //Put the advancements into the array
         for (int i = 0; i < nameSplit.length; i++) {
-            advancements[i] = server.getAdvancements().getAdvancement(new ResourceLocation("restrictedportals:" + RPCommon.nameSplit[i].toLowerCase().replace(" ", "")));
+            advancements[i] = server.getAdvancements().get(new ResourceLocation("restrictedportals:" + RPCommon.nameSplit[i].toLowerCase().replace(" ", "")));
         }
     }
 

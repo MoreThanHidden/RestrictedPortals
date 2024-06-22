@@ -46,7 +46,7 @@ public class RPCommon {
 
         //Get Config Values
         RPCommon.nameSplit = Services.PLATFORM.getConfigDimensionsNames().split(",");
-        RPCommon.dimResSplit = Arrays.stream(Services.PLATFORM.getConfigDimensionsResourceNames().split(",")).map(String::toLowerCase).map(ResourceLocation::new).collect(Collectors.toList());
+        RPCommon.dimResSplit = Arrays.stream(Services.PLATFORM.getConfigDimensionsResourceNames().split(",")).map(String::toLowerCase).map(ResourceLocation::parse).collect(Collectors.toList());
         RPCommon.itemSplit = Services.PLATFORM.getConfigCraftItems().split(",");
 
         RPCommon.advancements = new AdvancementHolder[RPCommon.nameSplit.length];
@@ -55,7 +55,7 @@ public class RPCommon {
         for (int i = 0; i < RPCommon.nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     Services.PLATFORM.getConfigCraftedMessage().replace("%dim%", RPCommon.nameSplit[i]),
-                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(BuiltInRegistries.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i])).getDescriptionId()).getString()),
+                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(BuiltInRegistries.ITEM.get(ResourceLocation.parse(RPCommon.itemSplit[i])).getDescriptionId()).getString()),
                     RPCommon.itemSplit[i],
                     RPCommon.nameSplit[i].toLowerCase().replace(" ",""),
                     path
@@ -78,7 +78,7 @@ public class RPCommon {
 
 	    //Put the advancements into the array
         for (int i = 0; i < nameSplit.length; i++) {
-            advancements[i] = server.getAdvancements().get(new ResourceLocation("restrictedportals:" + RPCommon.nameSplit[i].toLowerCase().replace(" ", "")));
+            advancements[i] = server.getAdvancements().get(ResourceLocation.parse("restrictedportals:" + RPCommon.nameSplit[i].toLowerCase().replace(" ", "")));
         }
     }
 
@@ -93,17 +93,17 @@ public class RPCommon {
             for (int i = 0; i < RPCommon.nameSplit.length; i++) {
                 if (dimension == ResourceKey.create(Registries.DIMENSION, RPCommon.dimResSplit.get(i))
                         && !playerMP.getAdvancements().getOrStartProgress(RPCommon.advancements[i]).isDone()) {
-                    //Prevent Spam (Only send message when interval is greater then 40 ticks and new servers are negative for some reason)
+                    //Prevent Spam (Only send message when interval is greater than 40 ticks and new servers are negative for some reason)
                     if(!sentMessage.containsKey(playerMP.getUUID())
                             || (playerMP.level().getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
                             || (playerMP.level().getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
-                        String item = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(RPCommon.itemSplit[i]))).getDisplayName().getString();
+                        String item = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(RPCommon.itemSplit[i]))).getDisplayName().getString();
                         if(!playerMP.level().isClientSide)
                             playerMP.displayClientMessage(Component.translatable(Services.PLATFORM.getConfigBlockedMessage().replace("%item%", item).replace("%dim%", RPCommon.nameSplit[i])), false);
                         sentMessage.put(playerMP.getUUID(), playerMP.level().getGameTime());
                     }
                     //Prevent Death by Lava for End Portal
-                    if(dimension == ResourceKey.create(Registries.DIMENSION, new ResourceLocation("the_end")) && Services.PLATFORM.getConfigPreventEPDeath()){
+                    if(dimension == ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse("the_end")) && Services.PLATFORM.getConfigPreventEPDeath()){
                         BlockPos coordinates = playerMP.getRespawnPosition();
                         if (coordinates == null){ coordinates = playerMP.level().getSharedSpawnPos(); }
                         playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());

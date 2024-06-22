@@ -14,7 +14,7 @@ public class AdvancementHelper {
 
         //Advancement Json
         JsonObject iconItem = new JsonObject();
-        iconItem.add("item", new JsonPrimitive(item));
+        iconItem.add("id", new JsonPrimitive(item));
 
         JsonObject jitem = new JsonObject();
         JsonArray jitems = new JsonArray();
@@ -51,7 +51,7 @@ public class AdvancementHelper {
         jo.add("requirements", requirements);
 
         //Create Json Advancement File
-        File file = new File(path + "/restrictedportals/data/restrictedportals/advancements/" + shortname + ".json");
+        File file = new File(path + "/restrictedportals/data/restrictedportals/advancement/" + shortname + ".json");
         try {
             if(file.createNewFile()){
                 Constants.LOGGER.info("Created Json File: " + file.getPath());
@@ -138,7 +138,7 @@ public class AdvancementHelper {
             Constants.LOGGER.info("DataPack Already Exists or Failed: " + folder.getPath());
         }
 
-        folder = new File(path + "/restrictedportals/data/restrictedportals/advancements");
+        folder = new File(path + "/restrictedportals/data/restrictedportals/advancement");
         if(folder.mkdir()){
             Constants.LOGGER.info("Created DataPack Folder: " + folder.getPath());
         }else{

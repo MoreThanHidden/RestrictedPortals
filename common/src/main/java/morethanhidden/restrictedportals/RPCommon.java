@@ -55,7 +55,7 @@ public class RPCommon {
         for (int i = 0; i < RPCommon.nameSplit.length; i++) {
             AdvancementHelper.AddCustomAdvancement(
                     Services.PLATFORM.getConfigCraftedMessage().replace("%dim%", RPCommon.nameSplit[i]),
-                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(BuiltInRegistries.ITEM.get(ResourceLocation.parse(RPCommon.itemSplit[i])).getDescriptionId()).getString()),
+                    Services.PLATFORM.getConfigDescription().replace("%dim%", RPCommon.nameSplit[i]).replace("%item%", Component.translatable(BuiltInRegistries.ITEM.get(ResourceLocation.parse(RPCommon.itemSplit[i])).get().value().getDescriptionId()).getString()),
                     RPCommon.itemSplit[i],
                     RPCommon.nameSplit[i].toLowerCase().replace(" ",""),
                     path
@@ -97,7 +97,7 @@ public class RPCommon {
                     if(!sentMessage.containsKey(playerMP.getUUID())
                             || (playerMP.level().getGameTime() - sentMessage.get(playerMP.getUUID())) > 40
                             || (playerMP.level().getGameTime() - sentMessage.get(playerMP.getUUID())) < 0) {
-                        String item = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(RPCommon.itemSplit[i]))).getDisplayName().getString();
+                        String item = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(RPCommon.itemSplit[i])).get()).getDisplayName().getString();
                         if(!playerMP.level().isClientSide)
                             playerMP.displayClientMessage(Component.translatable(Services.PLATFORM.getConfigBlockedMessage().replace("%item%", item).replace("%dim%", RPCommon.nameSplit[i])), false);
                         sentMessage.put(playerMP.getUUID(), playerMP.level().getGameTime());

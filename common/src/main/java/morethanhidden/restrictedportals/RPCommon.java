@@ -109,7 +109,7 @@ public class RPCommon {
                             coordinates = playerMP.getRespawnConfig().pos();
                         }
                         if (coordinates == null){ coordinates = playerMP.level().getSharedSpawnPos(); }
-                        playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());
+                        playerMP.teleportTo(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
                     return true;
                 }

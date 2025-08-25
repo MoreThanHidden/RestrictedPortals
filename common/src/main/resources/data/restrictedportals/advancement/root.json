@@ -5,7 +5,7 @@
         },
         "title": "Restricted Portals",
         "description": "Craft items to Unlock Dimensions",
-        "background": "minecraft:textures/block/obsidian.png"
+        "background": "minecraft:block/obsidian"
     },
     "criteria": {
         "root": {

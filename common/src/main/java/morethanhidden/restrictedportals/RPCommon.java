@@ -104,7 +104,10 @@ public class RPCommon {
                     }
                     //Prevent Death by Lava for End Portal
                     if(dimension == ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse("the_end")) && Services.PLATFORM.getConfigPreventEPDeath()){
-                        BlockPos coordinates = playerMP.getRespawnPosition();
+                        BlockPos coordinates = null;
+                        if (playerMP.getRespawnConfig() != null) {
+                            coordinates = playerMP.getRespawnConfig().pos();
+                        }
                         if (coordinates == null){ coordinates = playerMP.level().getSharedSpawnPos(); }
                         playerMP.setPos(coordinates.getX(), coordinates.getY(), coordinates.getZ());
                     }
